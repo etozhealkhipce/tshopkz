@@ -1,0 +1,46 @@
+// Colors
+$black: #000000;
+$red: #e22028;
+$gray: #171717;
+$white: #ffffff;
+$lightgray: #f1e5e5;
+$middlegray: #46474d;
+$green: #5ba851;
+
+// Bulma colors
+$title-color: $white;
+$subtitle-color: $lightgray;
+$section-padding: 4rem 1.5rem;
+$button-background-color: transparent;
+$button-color: $white;
+$button-hover-color: $white;
+$button-hover-border-color: $red;
+$button-padding-vertical: 0.2rem;
+$button-padding-horizontal: 2rem;
+$footer-background-color: $gray;
+$tabs-border-bottom-color: $middlegray;
+$tabs-link-color: $middlegray;
+$tabs-link-active-border-bottom-color: $red;
+$tabs-link-active-color: $red;
+$table-background-color: transparent;
+$table-color: $white;
+$table-row-hover-background-color: $gray;
+$table-cell-heading-color: #47484e;
+
+//Bulma buttons
+$button-color: $white;
+$button-background-color: transparent;
+$button-border-color: $red;
+$button-focus-color: $white;
+$button-focus-border-color: $red;
+$button-active-color: $white;
+$button-active-border-color: $red;
+$button-text-color: $white;
+$table-cell-border: 0px;
+$table-cell-padding: 1rem;
+
+// Bulma sizes
+$body-size: 18px;
+$modal-content-width: 1000px;
+
+@import '~/node_modules/bulma/bulma.sass';

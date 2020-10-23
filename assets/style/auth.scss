@@ -1,0 +1,62 @@
+.auth {
+  padding: 2.5rem;
+  border: 1px solid $red;
+  position: relative;
+
+  &__header {
+    .icon__close,
+    .icon__back {
+      position: absolute;
+      top: 2.5rem;
+      font-size: 2rem;
+      color: $white;
+    }
+
+    .icon__close {
+      right: 2.5rem;
+    }
+
+    .icon__back {
+      left: 2.5rem;
+    }
+  }
+
+  &__form {
+    margin-bottom: 0.5rem;
+  }
+
+  &__link {
+    a {
+      color: $white !important;
+      text-decoration: underline !important;
+    }
+  }
+
+  &__icons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .custom-input,
+  .button {
+    width: 100%;
+  }
+
+  .button {
+    margin-top: 1rem;
+  }
+
+  [class^='icon__'],
+  [class*=' icon__'] {
+    cursor: pointer;
+    color: $white;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    transition: 0.3s;
+
+    &:hover {
+      color: $red;
+    }
+  }
+}
