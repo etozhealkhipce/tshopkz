@@ -38,8 +38,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          ssh-add ~/.ssh/id_rsa 
+          ssh-add ~/.ssh/id_rsa
           cd /var/www/tshopkz
-          git pull origin master
+          git pull --force origin master
           npm install
-          pm2 start
+          npm run build
