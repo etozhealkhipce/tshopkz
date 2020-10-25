@@ -4,7 +4,7 @@
       <div class="auth">
         <div class="columns is-multiline is-centered">
           <div class="column is-full auth__header">
-            <h2 class="title is-3 has-text-centered">Вход бибот</h2>
+            <h2 class="title is-3 has-text-centered">Вход 123</h2>
             <nuxt-link to="/" class="icon__close"></nuxt-link>
           </div>
           <div class="column is-6 auth__form">
