@@ -40,7 +40,7 @@ jobs:
         script: |
           ssh-add ~/.ssh/id_rsa
           cd /var/www
-          rm -- -rf tshopkz
+          rm -rf tshopkz
           git clone git@github.com:etozhealkhipce/tshopkz.git
           cd tshopkz
           npm install
