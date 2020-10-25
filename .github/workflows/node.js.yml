@@ -38,6 +38,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
+          ssh-add ~/.ssh/id_rsa 
           cd /var/www/tshopkz
           git pull origin master
           npm install
