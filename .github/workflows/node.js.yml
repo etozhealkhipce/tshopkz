@@ -40,6 +40,7 @@ jobs:
         script: |
           ssh-add ~/.ssh/id_rsa
           cd /var/www/tshopkz
+          git reset --hard
           git pull --force origin master
           npm install
           npm run build
