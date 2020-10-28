@@ -3,7 +3,7 @@
     <section class="section">
       <div class="container">
         <div class="catalog">
-          <div v-if="category.length && products.length" class="columns is-multiline is-variable is-4">
+          <div v-if="products.length" class="columns is-multiline is-variable is-4">
             <div v-if="games && monitors" class="column is-full">
               <div class="columns is-multiline is-centered">
                 <div class="column is-8 is-centered">
@@ -137,6 +137,16 @@
                             <button v-else class="button">Уже в корзине</button>
                           </div>
                           <div class="column is-full">
+                            <div
+                              class="ks-widget"
+                              data-template="flatButton"
+                              data-merchant-sku="83284"
+                              data-merchant-code="Sulpak"
+                              data-city="750000000"
+                              data-style="mobile"
+                            ></div>
+                          </div>
+                          <div class="column is-full">
                             <button class="button">Подробнее</button>
                           </div>
                           <div class="column is-full">
@@ -170,6 +180,7 @@ export default {
   async fetch() {
     await this.$store.dispatch('categories/fetchCategoryProducts', { slug: this.$route.params.slug })
     await this.$store.dispatch('categories/fetchCurrentCategory', this.$route.params.slug)
+    window.ksWidgetInitializer.reinit()
   },
   data() {
     return {
@@ -199,6 +210,7 @@ export default {
     },
     ...mapGetters(['isAuthenticated', 'loggedInUser'])
   },
+
   watch: {
     fpsFilter: {
       handler(val) {
@@ -208,6 +220,19 @@ export default {
       },
       deep: true
     }
+  },
+  mounted() {
+    // const initKaspi = function(d, s, id) {
+    //   let js = null
+    //   let kjs = null
+    //   if (d.getElementById(id)) return
+    //   js = d.createElement(s)
+    //   js.id = id
+    //   js.src = 'https://kaspi.kz/kaspibutton/widget/ks-wi_ext.js'
+    //   kjs = document.getElementsByTagName(s)[0]
+    //   kjs.parentNode.insertBefore(js, kjs)
+    // }
+    // initKaspi(document, 'script', 'KS-Widget')
   },
   created() {
     this.updateProducts(this.products)
