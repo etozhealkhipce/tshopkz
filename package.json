@@ -17,11 +17,12 @@
     "@nuxtjs/bulma": "^1.2.7",
     "@nuxtjs/dotenv": "^1.4.0",
     "@nuxtjs/style-resources": "^1.0.0",
+    "file-saver": "^2.0.2",
     "nanogram.js": "^1.0.2",
     "nuxt": "2.12.2",
     "swiper": "^5.4.1",
+    "v-viewer": "^1.5.1",
     "vue-awesome-swiper": "^4.1.1",
-    "vue-light-gallery": "^1.0.1",
     "vue-scrollto": "^2.18.1",
     "vuelidate": "^0.7.5"
   },

@@ -12,7 +12,7 @@
             <div class="columns is-multiline">
               <div class="column is-6">
                 <figure class="image is-3by2">
-                  <img :src="`storage/${wholesale.image}`" />
+                  <img :src="`${photoPath}/${wholesale.image}`" />
                 </figure>
               </div>
               <div class="column is-6 wholesale__content">
@@ -46,7 +46,11 @@ export default {
       wholesale: null
     }
   },
-
+  computed: {
+    photoPath() {
+      return `${this.$store.state.photoPath}storage`
+    }
+  },
   methods: {
     async fetchwholesale() {
       try {
@@ -69,6 +73,7 @@ export default {
   }
 
   &__body {
+    color: white;
     margin-top: 2rem;
   }
 }

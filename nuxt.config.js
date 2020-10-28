@@ -37,7 +37,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/vuelidate', '~/plugins/lightGallery.client'],
+  plugins: ['~/plugins/vuelidate', '~/plugins/viewer'],
   /*
    ** Nuxt.js dev-modules
    */

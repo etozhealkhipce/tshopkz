@@ -5,12 +5,29 @@
         <div class="product">
           <template v-if="Object.keys(product).length !== 0">
             <div class="columns is-multiline is-variable is-4">
-              <div class="column is-6">
+              <div class="column is-6" @click="showImage">
                 <figure class="image is-3by2">
-                  <!-- <img :src="product.main_img" /> -->
-                  <no-ssr>
-                    <LightGallery :images="[product.main_img]" />
-                  </no-ssr>
+                  <div
+                    ref="viewer"
+                    v-viewer="{
+                      inline: false,
+                      button: true,
+                      navbar: false,
+                      title: false,
+                      toolbar: false,
+                      tooltip: false,
+                      movable: false,
+                      zoomable: false,
+                      rotatable: false,
+                      scalable: false,
+                      transition: false,
+                      fullscreen: true,
+                      keyboard: true,
+                      url: 'data-source'
+                    }"
+                  >
+                    <img :src="`${photoPath}/${product.main_img}`" :data-source="`${photoPath}/${product.main_img}`" />
+                  </div>
                 </figure>
               </div>
               <div class="column is-6">
@@ -67,7 +84,7 @@
                   <div class="card">
                     <div class="card-image">
                       <figure class="image is-16by9">
-                        <img :src="product.main_img" :alt="`product-${product.id}`" />
+                        <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${product.id}`" />
                       </figure>
                     </div>
                     <div class="card-content">
@@ -80,7 +97,7 @@
                   <div class="card">
                     <div class="card-image">
                       <figure class="image is-16by9">
-                        <img :src="product.main_img" :alt="`product-${product.id}`" />
+                        <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${product.id}`" />
                       </figure>
                     </div>
                     <div class="card-content">
@@ -94,32 +111,7 @@
               <template v-if="currentTab === 'photos'">
                 <div class="column is-4">
                   <figure class="image is-square">
-                    <img :src="product.main_img" :alt="`product-${product.id}`" />
-                  </figure>
-                </div>
-                <div class="column is-4">
-                  <figure class="image is-square">
-                    <img :src="product.main_img" :alt="`product-${product.id}`" />
-                  </figure>
-                </div>
-                <div class="column is-4">
-                  <figure class="image is-square">
-                    <img :src="product.main_img" :alt="`product-${product.id}`" />
-                  </figure>
-                </div>
-                <div class="column is-4">
-                  <figure class="image is-square">
-                    <img :src="product.main_img" :alt="`product-${product.id}`" />
-                  </figure>
-                </div>
-                <div class="column is-4">
-                  <figure class="image is-square">
-                    <img :src="product.main_img" :alt="`product-${product.id}`" />
-                  </figure>
-                </div>
-                <div class="column is-4">
-                  <figure class="image is-square">
-                    <img :src="product.main_img" :alt="`product-${product.id}`" />
+                    <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${product.id}`" />
                   </figure>
                 </div>
               </template>
@@ -156,6 +148,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 import Preloader from '@/components/ui/Preloader'
 
 export default {
@@ -175,12 +168,18 @@ export default {
     product() {
       return this.$store.getters['product/getProduct']
     },
+    photoPath() {
+      return `${this.$store.state.photoPath}storage`
+    },
     ...mapGetters(['isAuthenticated', 'loggedInUser'])
   },
   created() {
     this.updateProducts()
   },
   methods: {
+    showImage() {
+      this.$refs.viewer.$viewer.show()
+    },
     updateProducts() {
       const products = JSON.parse(localStorage.getItem('products')) || []
       this.newProduct = Object.assign(this.product)

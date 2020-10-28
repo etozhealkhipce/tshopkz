@@ -11,7 +11,7 @@
               <div class="card">
                 <div class="card-image">
                   <figure class="image is-square">
-                    <img :src="result.main_img" :alt="`product-${index}`" />
+                    <img :src="`${photoPath}/${result.main_img}`" :alt="`product-${index}`" />
                   </figure>
                 </div>
                 <div class="card-content">
@@ -88,6 +88,9 @@ export default {
   computed: {
     results() {
       return this.$store.state['results.page'].results
+    },
+    photoPath() {
+      return `${this.$store.state.photoPath}storage`
     }
   }
 }

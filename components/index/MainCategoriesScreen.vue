@@ -11,7 +11,7 @@
               <div class="card">
                 <div class="card-image">
                   <figure class="image is-square">
-                    <img :src="product.main_img" :alt="`product-${index}`" />
+                    <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${index}`" />
                   </figure>
                 </div>
                 <div class="card-content">
@@ -38,6 +38,11 @@ export default {
   data() {
     return {
       mainCategory: null
+    }
+  },
+  computed: {
+    photoPath() {
+      return `${this.$store.state.photoPath}storage`
     }
   },
   created() {

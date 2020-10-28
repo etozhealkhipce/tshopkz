@@ -8,8 +8,11 @@
             <a to="/" class="icon__close" @click="isModalActive = false"></a>
           </div>
           <div v-for="(city, index) in cities" :key="`city-${index}`" class="column is-3 location__body">
-            <input :id="`label-${index}`" v-model="currentCity" class="radio" type="radio" name :value="city" />
-            <label class="subtitle is-5" :for="`label-${index}`">{{ city.name }}</label>
+            <label class="radio-container"
+              >{{ city.name }}
+              <input :id="`label-${index}`" v-model="currentCity" class="radio" type="radio" name :value="city" />
+              <span class="radiomark"></span>
+            </label>
           </div>
         </div>
       </div>

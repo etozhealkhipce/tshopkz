@@ -17,7 +17,7 @@
                         <article class="tile is-child">
                           <nuxt-link :to="`/product/${product.slug}`">
                             <figure class="image is-4by3">
-                              <img :src="product.main_img" :alt="`product-${index}`" />
+                              <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${index}`" />
                             </figure>
                           </nuxt-link>
                         </article>
@@ -159,6 +159,10 @@
                             тг.
                           </p>
                         </div>
+                        <div v-if="couponSale" class="column">
+                          <p class="total__subtitle subtitle is-6">Скидка промокода:</p>
+                          <p class="title is-5 green">{{ couponSale }} %</p>
+                        </div>
                       </div>
                     </div>
                     <div class="column">
@@ -189,12 +193,30 @@
                       <p class="subtitle is-4 registration__subtile_background">Личные данные</p>
                     </div>
                     <div class="column is-6">
-                      <input id="individual" v-model="order.client_type" value="individual" type="radio" name />
-                      <label for="individual" class="label">Физическое лицо</label>
+                      <label class="radio-container"
+                        >Физическое лицо
+                        <input id="face" v-model="order.client_type" value="individual" type="radio" />
+                        <span class="radiomark"></span>
+                      </label>
+                      <span
+                        v-if="!$v.order.client_type.required && $v.order.client_type.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div class="column is-6">
-                      <input id="legal" v-model="order.client_type" value="legal" type="radio" name />
-                      <label for="legal" class="label">Юридическое лицо</label>
+                      <label class="radio-container"
+                        >Юридическое лицо
+                        <input id="legal" v-model="order.client_type" value="legal" type="radio" />
+                        <span class="radiomark"></span>
+                      </label>
+                      <span
+                        v-if="!$v.order.client_type.required && $v.order.client_type.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div class="column is-6">
                       <label for="second_name" class="label">Фамилия</label>
@@ -205,10 +227,22 @@
                         type="text"
                         name="second_name"
                       />
+                      <span
+                        v-if="!$v.order.second_name.required && $v.order.second_name.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div class="column is-6">
                       <label for="name" class="label">Имя</label>
                       <input id="name" v-model="order.name" class="custom-input" type="text" name="name" />
+                      <span
+                        v-if="!$v.order.name.required && $v.order.name.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div class="column is-6">
                       <label for="middle_name" class="label">Отчество</label>
@@ -219,15 +253,39 @@
                         type="text"
                         name="middle_name"
                       />
+                      <span
+                        v-if="!$v.order.middle_name.required && $v.order.middle_name.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div class="column is-6"></div>
                     <div class="column is-6">
                       <label for="phone" class="label">Номер телефона</label>
                       <input id="phone" v-model="order.phone" class="custom-input" type="text" name="phone" />
+                      <span
+                        v-if="!$v.order.phone.required && $v.order.phone.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div class="column is-6">
                       <label for="email" class="label">E-mail</label>
                       <input id="email" v-model="order.email" class="custom-input" type="email" name="email" />
+                      <span
+                        v-if="!$v.order.email.required && $v.order.email.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
+                      <span
+                        v-if="!$v.order.email.email && $v.order.email.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Неверный формат почты
+                      </span>
                     </div>
                     <div class="column is-full">
                       <p class="subtitle is-4 registration__subtile_background">Информация о доставке</p>
@@ -235,26 +293,75 @@
                     <div class="column is-6">
                       <label for="city" class="label">Город</label>
                       <input id="city" v-model="order.city" class="custom-input" type="text" name="city" />
+                      <span
+                        v-if="!$v.order.city.required && $v.order.city.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div class="column is-6">
                       <label for="street" class="label">Улица</label>
                       <input id="street" v-model="order.street" class="custom-input" type="text" name="street" />
+                      <span
+                        v-if="!$v.order.street.required && $v.order.street.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div class="column is-6">
                       <label for="house" class="label">Дом</label>
                       <input id="house" v-model="order.house" class="custom-input" type="text" name="house" />
+                      <span
+                        v-if="!$v.order.house.required && $v.order.house.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div class="column is-6">
                       <label for="flat" class="label">Квартира</label>
                       <input id="flat" v-model="order.flat" class="custom-input" type="text" name="flat" />
                     </div>
                     <div class="column is-6">
-                      <input id="deliveryTrue" v-model="order.delivery_type" value="delivery" type="radio" name />
-                      <label for="deliveryTrue" class="label">Доставка</label>
+                      <label class="radio-container"
+                        >Доставка
+                        <input id="deliveryTrue" v-model="order.delivery_type" value="delivery" type="radio" name />
+                        <span class="radiomark"></span>
+                      </label>
+                      <span
+                        v-if="!$v.order.delivery_type.required && $v.order.delivery_type.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div class="column is-6">
-                      <input id="deliveryFalse" v-model="order.delivery_type" value="yourself" type="radio" name />
-                      <label for="deliveryFalse" class="label">Забрать самому</label>
+                      <label class="radio-container"
+                        >Забрать самому
+                        <input
+                          id="deliveryFalse"
+                          v-model="order.delivery_type"
+                          value="yourself"
+                          type="radio"
+                          name
+                          @change="
+                            () => {
+                              order.receiverCity = ''
+                              order.receiverCityId = ''
+                              currentReceiverCity = ''
+                            }
+                          "
+                        />
+                        <span class="radiomark"></span>
+                      </label>
+                      <span
+                        v-if="!$v.order.delivery_type.required && $v.order.delivery_type.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                     <div v-if="order.delivery_type === 'delivery'" class="column is-6">
                       <label for="deliveryCompany" class="label">Город доставки</label>
@@ -268,6 +375,12 @@
                           <option v-for="city in cities" :key="city.code" :value="city">{{ city.name }}</option>
                         </select>
                       </div>
+                      <!-- <span
+                        v-if="!$v.order.receiverCity.required && $v.order.receiverCity.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span> -->
                     </div>
                     <div class="column is-6"></div>
                     <div class="column is-6"></div>
@@ -292,6 +405,12 @@
                           <option value="online">Онлайн-оплата</option>
                         </select>
                       </div>
+                      <span
+                        v-if="!$v.order.payment_type.required && $v.order.payment_type.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -381,6 +500,7 @@
 </template>
 
 <script>
+import { required, email } from 'vuelidate/lib/validators'
 import loaders from '~/mixins/loaders'
 
 export default {
@@ -398,8 +518,8 @@ export default {
         sale: null
       },
       couponFailed: false,
+      couponSale: '',
 
-      // todo: replace at order fields
       delivery: true,
       deliveryCompany: '',
       comment: '',
@@ -454,6 +574,9 @@ export default {
     },
     cities() {
       return this.$store.state.cities
+    },
+    photoPath() {
+      return `${this.$store.state.photoPath}storage`
     }
   },
   created() {
@@ -463,6 +586,13 @@ export default {
     }
   },
   methods: {
+    async addToWishlist(id) {
+      await this.$axios.post(`/user/wishlist/${id}`)
+      this.fetchWishlist()
+    },
+    async fetchWishlist() {
+      await this.$store.dispatch('account/fetchWishlist')
+    },
     setReceiverCity(currentReceiverCity) {
       this.order.receiverCity = currentReceiverCity.name
       this.order.receiverCityId = currentReceiverCity.code
@@ -473,12 +603,14 @@ export default {
         this.couponFailed = false
         const response = await this.$axios.get(`coupon/${this.order.coupon}`)
         this.couponStatus = response.data
+        this.couponSale = response.data.sale
         this.getTotalPrice()
         this.totalPrice = this.totalPrice - (this.totalPrice / 100) * response.data.sale
         this.$store.dispatch('editIsLoading', false)
       } catch {
         this.getTotalPrice()
         this.order.coupon = ''
+        this.couponSale = ''
         this.couponFailed = true
         this.couponStatus = {
           name: '',
@@ -528,50 +660,57 @@ export default {
       try {
         this.$store.dispatch('editIsLoading', true)
 
-        this.orderInfo = null
-        const newProducts = []
+        this.$v.$touch()
+        if (!this.$v.$invalid) {
+          this.orderInfo = null
+          const newProducts = []
 
-        this.productsArr.forEach((product) => {
-          const newProduct = {
-            product_id: product.id,
-            qty: product.qty
-          }
-
-          newProducts.push(newProduct)
-        })
-
-        const response = await this.$axios.post('/orders', {
-          client_type: this.order.client_type,
-          second_name: this.order.second_name,
-          name: this.order.name,
-          middle_name: this.order.middle_name,
-          email: this.order.email,
-          phone: this.order.phone,
-          city: this.order.city,
-          street: this.order.street,
-          house: this.order.house,
-          flat: this.order.flat,
-          delivery_type: this.order.delivery_type,
-          delivery_company_name: this.order.delivery_company_name,
-          delivery_message: this.order.delivery_message,
-          payment_type: this.order.payment_type,
-          coupon: this.order.coupon,
-          products: newProducts,
-          senderCity: this.order.senderCity,
-          receiverCity: this.order.receiverCity,
-          senderCityId: this.order.senderCityId,
-          receiverCityId: this.order.receiverCityId,
-          tariffList: this.order.tariffList,
-          services: [
-            {
-              id: 2,
-              param: 1000
+          this.productsArr.forEach((product) => {
+            const newProduct = {
+              product_id: product.id,
+              qty: product.qty
             }
-          ]
-        })
 
-        this.orderInfo = response.data
-        this.scrollTop()
+            newProducts.push(newProduct)
+          })
+
+          const response = await this.$axios.post('/orders', {
+            client_type: this.order.client_type,
+            second_name: this.order.second_name,
+            name: this.order.name,
+            middle_name: this.order.middle_name,
+            email: this.order.email,
+            phone: this.order.phone,
+            city: this.order.city,
+            street: this.order.street,
+            house: this.order.house,
+            flat: this.order.flat,
+            delivery_type: this.order.delivery_type,
+            delivery_company_name: this.order.delivery_company_name,
+            delivery_message: this.order.delivery_message,
+            payment_type: this.order.payment_type,
+            coupon: this.order.coupon,
+            products: newProducts,
+            senderCity: this.order.senderCity,
+            receiverCity: this.order.receiverCity,
+            senderCityId: this.order.senderCityId,
+            receiverCityId: this.order.receiverCityId,
+            tariffList: this.order.tariffList,
+            services: [
+              {
+                id: 2,
+                param: 1000
+              }
+            ]
+          })
+
+          localStorage.removeItem('products')
+          this.$store.dispatch('cart/addCartProducts', localStorage.getItem('products'))
+          this.$forceUpdate()
+
+          this.orderInfo = response.data
+          this.scrollTop()
+        }
         this.$store.dispatch('editIsLoading', false)
       } catch {
         this.error = 'Ошибка, попробуйте позднее!'
@@ -613,6 +752,44 @@ export default {
 
         this.totalPrice += price * this.productsObj[product.id].qty
       })
+    }
+  },
+  validations: {
+    order: {
+      client_type: {
+        required
+      },
+      name: {
+        required
+      },
+      second_name: {
+        required
+      },
+      middle_name: {
+        required
+      },
+      email: {
+        required,
+        email
+      },
+      phone: {
+        required
+      },
+      city: {
+        required
+      },
+      street: {
+        required
+      },
+      house: {
+        required
+      },
+      delivery_type: {
+        required
+      },
+      payment_type: {
+        required
+      }
     }
   }
 }

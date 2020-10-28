@@ -229,7 +229,7 @@
                       <div class="card-image">
                         <figure class="image is-square">
                           <p class="power title is-3">84</p>
-                          <img :src="product.main_img" :alt="`product-${index}`" />
+                          <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${index}`" />
                         </figure>
                       </div>
                       <div class="card-content">
@@ -344,11 +344,19 @@
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Тип оплаты</span>
-                            <span class="subtitle is-5">{{ order.payment_type }}</span>
+                            <span class="subtitle is-5">{{
+                              order.payment_type == 'cash'
+                                ? 'Наличные'
+                                : order.payment_type == 'loan'
+                                ? 'Кредит'
+                                : 'Онлайн'
+                            }}</span>
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Физ. или юр. лицо</span>
-                            <span class="subtitle is-5">{{ order.client_type }}</span>
+                            <span class="subtitle is-5">{{
+                              order.client_type == 'individual' ? 'Физ. лицо' : 'Юр. лицо'
+                            }}</span>
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Дата</span>
@@ -440,6 +448,9 @@ export default {
     },
     orders() {
       return this.$store.state.account.orders
+    },
+    photoPath() {
+      return `${this.$store.state.photoPath}storage`
     }
   },
   created() {

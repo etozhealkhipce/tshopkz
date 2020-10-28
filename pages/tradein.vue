@@ -7,14 +7,14 @@
             <div class="columns">
               <div class="column is-6">
                 <figure class="image is-3by2">
-                  <img src />
+                  <img src="~/assets/images/main-catalog-1.png" />
                 </figure>
               </div>
               <div class="column is-6 tradein__content">
                 <h1 class="title is-spaced">Обменяй свой старый компьютер на новый!</h1>
                 <p class="subtitle">
-                  Ищите мощный и красивый компьютер для игр?RAPTOR ONE создан именно для вас. Высокая производительность
-                  и великолепный дизайн в одном системном блоке.
+                  Ищите мощный и красивый компьютер для игр. RAPTOR ONE создан именно для вас. Высокая
+                  производительность и великолепный дизайн в одном системном блоке.
                 </p>
               </div>
             </div>
@@ -72,15 +72,18 @@
                                   :key="`value-${index}`"
                                   class="column is-4"
                                 >
-                                  <input
-                                    :id="`label-${index}`"
-                                    v-model="currentProducts[attribute.id]"
-                                    class="radio"
-                                    type="radio"
-                                    :value="value"
-                                    @change="changeCurrentProducts(value, attribute.id)"
-                                  />
-                                  <label class="subtitle is-5" :for="`label-${index}`">{{ value.value }}</label>
+                                  <label class="radio-container"
+                                    >{{ value.value }}
+                                    <input
+                                      :id="`label-${index}`"
+                                      v-model="currentProducts[attribute.id]"
+                                      class="radio"
+                                      type="radio"
+                                      :value="value"
+                                      @change="changeCurrentProducts(value, attribute.id)"
+                                    />
+                                    <span class="radiomark"></span>
+                                  </label>
                                 </div>
                               </div>
                             </div>
@@ -93,7 +96,7 @@
                     <h2 class="title is-4">
                       Примерная оценка стоимости вашего ПК:
                     </h2>
-                    <h3 class="title is-3 is-spaced">
+                    <h3 class="title is-3 is-spaced green">
                       {{ computerPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} тенге
                     </h3>
                     <h2 class="subtitle is-5 is-spaced">
@@ -114,6 +117,12 @@
                       type="text"
                       name="name"
                     />
+                    <span
+                      v-if="!$v.order.name.required && $v.order.name.$error"
+                      class="red subtitle is-6 error__subtitle"
+                    >
+                      Обязательное поле
+                    </span>
                   </div>
                   <div class="column is-6">
                     <input
@@ -124,6 +133,18 @@
                       type="text"
                       name="email"
                     />
+                    <span
+                      v-if="!$v.order.email.required && $v.order.email.$error"
+                      class="red subtitle is-6 error__subtitle"
+                    >
+                      Обязательное поле
+                    </span>
+                    <span
+                      v-if="!$v.order.email.email && $v.order.email.$error"
+                      class="red subtitle is-6 error__subtitle"
+                    >
+                      Неверный формат почты
+                    </span>
                   </div>
                   <div class="column is-6">
                     <input
@@ -134,6 +155,12 @@
                       type="text"
                       name="phone"
                     />
+                    <span
+                      v-if="!$v.order.phone.required && $v.order.phone.$error"
+                      class="red subtitle is-6 error__subtitle"
+                    >
+                      Обязательное поле
+                    </span>
                   </div>
                   <div class="column is-full">
                     <textarea
@@ -177,6 +204,18 @@
                 </div>
               </div>
             </div>
+
+            <template v-if="orderInfo">
+              <div class="columns is-multiline is-centered">
+                <div class="column is-full">
+                  <h2 class="title is-3 has-text-centered is-spaced green">Спасибо!</h2>
+                  <p class="subtitle has-text-centered is-5 middlegray">Мы уже рассматриваем ваше предложение!</p>
+                  <p class="subtitle has-text-centered is-5 green">
+                    Наши менеджеры свяжутся с вами в ближайшее время!
+                  </p>
+                </div>
+              </div>
+            </template>
           </template>
           <Preloader v-else />
         </div>
@@ -186,6 +225,8 @@
 </template>
 
 <script>
+import { required, email } from 'vuelidate/lib/validators'
+
 import { mapActions } from 'vuex'
 import Preloader from '@/components/ui/Preloader'
 
@@ -198,6 +239,7 @@ export default {
       tradeInCategories: null,
       tradeInAttributes: null,
       tradeInAttributeValues: {},
+      orderInfo: false,
 
       currentCategory: '',
       currentProducts: {},
@@ -269,34 +311,40 @@ export default {
     async sendOrder() {
       try {
         this.editIsLoading(true)
-        window.scrollTo(0, 0)
 
-        this.order.products = Object.keys(this.currentProducts)
-          .map((product) => this.currentProducts[product].value)
-          .join(', ')
+        this.$v.$touch()
+        if (!this.$v.$invalid) {
+          window.scrollTo(0, 0)
 
-        const formData = new FormData()
+          this.order.products = Object.keys(this.currentProducts)
+            .map((product) => this.currentProducts[product].value)
+            .join(', ')
 
-        for (let i = 0; i < this.order.images.length; i++) {
-          const image = this.order.images[i]
-          formData.append('images[]', image)
+          const formData = new FormData()
+
+          for (let i = 0; i < this.order.images.length; i++) {
+            const image = this.order.images[i]
+            formData.append('images[]', image)
+          }
+          formData.append('name', this.order.name)
+          formData.append('email', this.order.email)
+          formData.append('phone', this.order.phone)
+          formData.append('comment', this.order.comment)
+          formData.append('products', this.order.products)
+          await this.$axios.post('/tradein', formData)
+
+          this.currentCategory = ''
+          this.currentProducts = {}
+          this.accordionCurrentIndex = null
+          this.order.images = []
+          this.order.name = ''
+          this.order.email = ''
+          this.order.phone = ''
+          this.order.comment = ''
+          this.order.products = ''
+
+          this.orderInfo = true
         }
-        formData.append('name', this.order.name)
-        formData.append('email', this.order.email)
-        formData.append('phone', this.order.phone)
-        formData.append('comment', this.order.comment)
-        formData.append('products', this.order.products)
-        await this.$axios.post('/tradein', formData)
-
-        this.currentCategory = ''
-        this.currentProducts = {}
-        this.accordionCurrentIndex = null
-        this.order.images = []
-        this.order.name = ''
-        this.order.email = ''
-        this.order.phone = ''
-        this.order.comment = ''
-        this.order.products = ''
 
         this.editIsLoading(false)
       } catch (error) {
@@ -310,6 +358,20 @@ export default {
         this.order.phone = ''
         this.order.comment = ''
         this.order.products = ''
+      }
+    }
+  },
+  validations: {
+    order: {
+      name: {
+        required
+      },
+      email: {
+        required,
+        email
+      },
+      phone: {
+        required
       }
     }
   }

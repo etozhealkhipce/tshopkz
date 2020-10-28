@@ -1,7 +1,7 @@
 // import Vue from 'vue'
 
 export const state = () => ({
-  product: {}
+  product: [{}]
 })
 
 export const mutations = {
@@ -19,6 +19,6 @@ export const actions = {
 
 export const getters = {
   getProduct(state) {
-    return state.product
+    return state.product[0]
   }
 }

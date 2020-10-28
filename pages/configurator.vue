@@ -23,17 +23,20 @@
                   <div class="details__body">
                     <template v-for="(category, index) in categories">
                       <p :key="`category-${index}`" class="category_s">
-                        <input
-                          :id="`radioS-${index}`"
-                          :key="`radioS-${index}`"
-                          v-model="currentCatId"
-                          :value="category.id"
-                          :disabled="category.slug !== 'motherboards' && !products[0]"
-                          name="radioS"
-                          class="radio"
-                          type="radio"
-                        />
-                        <label class="subtitle is-5" :for="`radioS-${index}`">{{ category.title }}</label>
+                        <label class="radio-container">
+                          {{ category.title }}
+                          <input
+                            :id="`radioS-${index}`"
+                            :key="`radioS-${index}`"
+                            v-model="currentCatId"
+                            :value="category.id"
+                            :disabled="category.slug !== 'motherboards' && !products[0]"
+                            name="radioS"
+                            class="radio"
+                            type="radio"
+                          />
+                          <span class="radiomark"></span>
+                        </label>
                       </p>
                     </template>
                   </div>
@@ -55,28 +58,45 @@
                         >
                           <div class="columns">
                             <div class="column is-1">
-                              <input
-                                :id="`radio-${index}`"
-                                :key="`radio-${index}`"
-                                v-model="products[catIndex]"
-                                :value="product.id"
-                                name="radio"
-                                class="radio"
-                                type="radio"
-                              />
-                            </div>
-                            <div class="column">
-                              <figure class="image is-128x128">
-                                <img src="https://bulma.io/images/placeholders/128x128.png" />
-                              </figure>
-                            </div>
-                            <div class="column is-6">
-                              <label :key="`label-${index}`" class="subtitle is-5" :for="`radio-${index}`">
-                                {{ product.title }}
+                              <label class="radio-container">
+                                <input
+                                  :id="`radio-${index}`"
+                                  :key="`radio-${index}`"
+                                  v-model="products[catIndex]"
+                                  :value="product.id"
+                                  name="radio"
+                                  class="radio"
+                                  type="radio"
+                                />
+                                <span class="radiomark"></span>
                               </label>
                             </div>
                             <div class="column">
-                              123.9123 тенге
+                              <figure class="image is-128x128">
+                                <img :src="`${photoPath}/${product.main_img}`" />
+                              </figure>
+                            </div>
+                            <div class="column is-6">
+                              <label :key="`label-${product.title}`" class="subtitle is-5" :for="`radio-${index}`">
+                                {{ product.title }}
+                              </label>
+                              <p
+                                :key="`label-${product.description}`"
+                                class="subtitle is-6 table-desc"
+                                :for="`radio-${index}`"
+                              >
+                                {{ product.description }}
+                              </p>
+                            </div>
+                            <div class="column">
+                              <p class="subtitle is-6 table-price">
+                                {{
+                                  parseInt(product.price)
+                                    .toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                                }}
+                                тенге
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -90,7 +110,10 @@
                   <div v-if="paramsProduct.product && paramsProduct.productsInProduct" class="card">
                     <div class="card-image">
                       <figure class="image is-square">
-                        <img :src="paramsProduct.product.main_img" :alt="`product-${paramsProduct.product.id}`" />
+                        <img
+                          :src="`${photoPath}/${paramsProduct.product.main_img}`"
+                          :alt="`product-${paramsProduct.product.id}`"
+                        />
                       </figure>
                     </div>
                     <div class="card-content">
@@ -156,87 +179,6 @@
                       </div>
                     </div>
                   </div>
-                  <!-- <div v-else class="card">
-                    <div class="card-image">
-                      <figure class="image is-square">
-                        <img :src="product.paramsProduct.main_img" :alt="`product-${paramsProduct.product.id}`" />
-                      </figure>
-                    </div>
-                    <div class="card-content">
-                      <hr />
-                      <h3 class="card-content__main-title title is-3 is-spaced">{{ product.paramsProduct.title }}</h3>
-                      <p class="bank-price subtitle is-6">
-                        Рассрочка:
-                        {{
-                          Math.floor(product.paramsProduct.price * 0.3)
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                        }}
-                        тг.
-                      </p>
-                      <p class="price subtitle is-4">
-                        Стоимость:
-                        {{
-                          Math.round(
-                            parseInt(product.paramsProduct.price) -
-                              (parseInt(product.paramsProduct.sale || 0) / 100) * parseInt(product.paramsProduct.price)
-                          )
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                        }}
-                        тг.
-                      </p>
-                      <p v-if="product.paramsProduct.sale" class="price subtitle is-4">
-                        Скидка:
-                        <span class="green">
-                          {{ product.paramsProduct.sale }}
-                          %</span
-                        >
-                      </p>
-                      <hr />
-                      <ul>
-                        <li class="card-content__part">
-                          <span class="card-content__part_name subtitle is-6">Видеокарта</span>
-                          <span class="subtitle is-5">NVIDIA GeForce RTX 2080 Ti</span>
-                        </li>
-                        <li class="card-content__part">
-                          <span class="card-content__part_name subtitle is-6">Процессор</span>
-                          <span class="subtitle is-5">Intel® Core™ i9-9900KF</span>
-                        </li>
-                        <li class="card-content__part">
-                          <span class="card-content__part_name subtitle is-6">Материнская плата</span>
-                          <span class="subtitle is-5">Intel® Z390 Chipset ATX</span>
-                        </li>
-                        <li class="card-content__part">
-                          <span class="card-content__part_name subtitle is-6">Оперативная память</span>
-                          <span class="subtitle is-5">4 x 16GB DDR4-3200 RGB</span>
-                        </li>
-                        <li class="card-content__part">
-                          <span class="card-content__part_name subtitle is-6">Жесткий диск</span>
-                          <span class="subtitle is-5">4TB HDD SATA 7200rpm</span>
-                        </li>
-                      </ul>
-                      <hr />
-
-                      <div class="card-content__buttons">
-                        <div class="card-content__buttons_header columns is-multiline">
-                          <div class="column is-full">
-                            <button
-                              v-if="!product.paramsProduct.copy"
-                              class="button button_red"
-                              @click.prevent="addToCart(product.paramsProduct)"
-                            >
-                              Купить
-                            </button>
-                            <button v-else class="button">Уже в корзине</button>
-                          </div>
-                          <div class="column is-full">
-                            <button class="button">Сохранить сборку</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>-->
                 </article>
               </div>
             </div>
@@ -274,6 +216,9 @@ export default {
   computed: {
     isLoading() {
       return this.$store.state.isLoading
+    },
+    photoPath() {
+      return `${this.$store.state.photoPath}storage`
     }
   },
   watch: {
@@ -316,7 +261,7 @@ export default {
         const product = this.$route.params.product
 
         this.fetchProductInProducts(product.id)
-        this.paramsProduct.product = product
+        this.paramsProduct.product = Object.assign(product)
       } else {
         this.$store.dispatch('editIsLoading', false)
       }
@@ -339,6 +284,26 @@ export default {
     },
     checkProductId(id) {
       return this.paramsProduct.productsId.includes(id)
+    },
+    addToCart(item) {
+      const products = JSON.parse(localStorage.getItem('products')) || []
+
+      let copy = false
+
+      products.forEach((element) => {
+        if (element.id === item.id) {
+          copy = true
+        }
+      })
+
+      if (!copy) {
+        products.push(item)
+      }
+
+      localStorage.setItem('products', JSON.stringify(products))
+      this.$store.dispatch('cart/addCartProducts', localStorage.getItem('products'))
+
+      this.$router.push('cart')
     }
   }
 }
@@ -400,5 +365,13 @@ export default {
       margin-top: 1rem;
     }
   }
+}
+
+.table-desc {
+  margin-top: 1rem;
+}
+
+.table-price {
+  opacity: 0.5;
 }
 </style>

@@ -3,7 +3,7 @@
     <section class="section">
       <div class="container">
         <div class="catalog">
-          <div v-if="category.length !== 0 && products.length !== 0" class="columns is-multiline is-variable is-4">
+          <div v-if="category.length && products.length" class="columns is-multiline is-variable is-4">
             <div v-if="games && monitors" class="column is-full">
               <div class="columns is-multiline is-centered">
                 <div class="column is-8 is-centered">
@@ -65,7 +65,6 @@
                       <div class="card-content__header">
                         <!-- <a class="subtitle is-6"> <span class="icon__sravnenie"></span>Сравнение </a> -->
                         <template v-if="isAuthenticated">
-                          {{ product.in_whishlist }}
                           <a
                             v-if="!product.in_whishlist"
                             class="subtitle is-6"
@@ -107,18 +106,27 @@
                           %</span
                         >
                       </p>
-                      <hr />
-                      <ul>
-                        <li
-                          v-for="(part, index) in product.product_parts"
-                          :key="`part-${index}`"
-                          class="card-content__part"
-                        >
-                          <span class="card-content__part_name subtitle is-6">{{ part.title }}</span>
-                          <span class="subtitle is-5">{{ part.description }}</span>
-                        </li>
-                      </ul>
-                      <hr />
+                      <p v-if="product && product.fps_values" class="price subtitle is-4">
+                        FPS:
+                        <span v-for="(fps, index) in product.fps_values" :key="`fps-${index}`" class="green">
+                          {{ fps.value }}
+                        </span>
+                      </p>
+
+                      <template v-if="product && product.product_parts && product.product_parts.length">
+                        <hr />
+                        <ul>
+                          <li
+                            v-for="(part, index) in product.product_parts"
+                            :key="`part-${index}`"
+                            class="card-content__part"
+                          >
+                            <span class="card-content__part_name subtitle is-6">{{ part.title }}</span>
+                            <span class="subtitle is-5">{{ part.description }}</span>
+                          </li>
+                        </ul>
+                        <hr />
+                      </template>
 
                       <div class="card-content__buttons">
                         <div class="card-content__buttons_header columns is-multiline">
@@ -186,10 +194,10 @@ export default {
     wishlist() {
       return this.$store.state.account.wishlist
     },
-    ...mapGetters(['isAuthenticated', 'loggedInUser']),
     photoPath() {
       return `${this.$store.state.photoPath}storage`
-    }
+    },
+    ...mapGetters(['isAuthenticated', 'loggedInUser'])
   },
   watch: {
     fpsFilter: {
@@ -210,7 +218,7 @@ export default {
     async fetchFps(categoryId, gameId, monitorId) {
       const response = await this.$axios.get(`fps-filter/${categoryId}/${gameId}/${monitorId}`)
       if (response.data.length) {
-        this.updateProducts(response)
+        this.updateProducts(response.data)
       }
     },
     async fetchGames() {
@@ -231,7 +239,8 @@ export default {
     },
     updateProducts(defaultProducts) {
       const products = JSON.parse(localStorage.getItem('products')) || []
-      this.newProducts = defaultProducts.slice()
+      this.newProducts = []
+      this.$set(this, ['newProducts'], defaultProducts)
 
       this.newProducts.forEach((vuexProduct) => {
         products.forEach((cartProduct) => {

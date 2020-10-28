@@ -7,7 +7,7 @@
             <h2 class="title">Собери свой мощный игровой ПК</h2>
             <p class="subtitle">В твоем арсенале мощнейшие комплектующие от ведущих производителей</p>
 
-            <button class="button button_red">Собрать свой ПК</button>
+            <button class="button button_red" @click="$router.push('configurator')">Собрать свой ПК</button>
           </div>
         </div>
       </div>

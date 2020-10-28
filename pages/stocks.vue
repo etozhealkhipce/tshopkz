@@ -17,7 +17,7 @@
                   <div class="card">
                     <div class="card-image">
                       <figure class="image is-square">
-                        <img :src="product.main_img" :alt="`product-${index}`" />
+                        <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${index}`" />
                       </figure>
                     </div>
                     <div class="card-content">
@@ -65,30 +65,27 @@
                           %</span
                         >
                       </p>
-                      <hr />
-                      <ul>
-                        <li class="card-content__part">
-                          <span class="card-content__part_name subtitle is-6">Видеокарта</span>
-                          <span class="subtitle is-5">NVIDIA GeForce RTX 2080 Ti</span>
-                        </li>
-                        <li class="card-content__part">
-                          <span class="card-content__part_name subtitle is-6">Процессор</span>
-                          <span class="subtitle is-5">Intel® Core™ i9-9900KF</span>
-                        </li>
-                        <li class="card-content__part">
-                          <span class="card-content__part_name subtitle is-6">Материнская плата</span>
-                          <span class="subtitle is-5">Intel® Z390 Chipset ATX</span>
-                        </li>
-                        <li class="card-content__part">
-                          <span class="card-content__part_name subtitle is-6">Оперативная память</span>
-                          <span class="subtitle is-5">4 x 16GB DDR4-3200 RGB</span>
-                        </li>
-                        <li class="card-content__part">
-                          <span class="card-content__part_name subtitle is-6">Жесткий диск</span>
-                          <span class="subtitle is-5">4TB HDD SATA 7200rpm</span>
-                        </li>
-                      </ul>
-                      <hr />
+                      <p v-if="product && product.fps_values" class="price subtitle is-4">
+                        FPS:
+                        <span v-for="(fps, index) in product.fps_values" :key="`fps-${index}`" class="green">
+                          {{ fps.value }}
+                        </span>
+                      </p>
+
+                      <template v-if="product && product.product_parts && product.product_parts.length">
+                        <hr />
+                        <ul>
+                          <li
+                            v-for="(part, index) in product.product_parts"
+                            :key="`part-${index}`"
+                            class="card-content__part"
+                          >
+                            <span class="card-content__part_name subtitle is-6">{{ part.title }}</span>
+                            <span class="subtitle is-5">{{ part.description }}</span>
+                          </li>
+                        </ul>
+                        <hr />
+                      </template>
 
                       <div class="card-content__buttons">
                         <div class="card-content__buttons_header columns is-multiline">
@@ -142,7 +139,10 @@ export default {
     results() {
       return this.$store.state['results.page'].results
     },
-    ...mapGetters(['isAuthenticated', 'loggedInUser'])
+    ...mapGetters(['isAuthenticated', 'loggedInUser']),
+    photoPath() {
+      return `${this.$store.state.photoPath}storage`
+    }
   },
   methods: {
     async fetchProducts() {
