@@ -8,7 +8,7 @@
               <div class="column is-6" @click="showImage">
                 <figure class="image is-3by2">
                   <div
-                    ref="viewer"
+                    ref="mainImage"
                     v-viewer="{
                       inline: false,
                       button: true,
@@ -66,48 +66,28 @@
                     <button v-else class="button">Уже в корзине</button>
                   </div>
                   <div class="column is-6">
+                    <div
+                      class="ks-widget"
+                      data-template="flatButton"
+                      data-merchant-sku="83284"
+                      data-merchant-code="Sulpak"
+                      data-city="750000000"
+                      data-style="mobile"
+                    ></div>
+                  </div>
+                  <div class="column is-6">
                     <button class="button">Собрать эту модель</button>
                   </div>
                 </div>
               </div>
               <div class="product__menu column is-full">
                 <ul class="product__list">
-                  <li @click="currentTab = 'description'">Описание</li>
                   <li @click="currentTab = 'photos'">Фотографии</li>
                   <li @click="currentTab = 'specification'">Спецификация</li>
                 </ul>
               </div>
             </div>
             <div class="columns is-multiline">
-              <template v-if="currentTab === 'description'">
-                <div class="column is-6">
-                  <div class="card">
-                    <div class="card-image">
-                      <figure class="image is-16by9">
-                        <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${product.id}`" />
-                      </figure>
-                    </div>
-                    <div class="card-content">
-                      <h3 class="title is-5 is-spaced">{{ product.title }}</h3>
-                      <p class="subtitle is-5">{{ product.description }}</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="column is-6">
-                  <div class="card">
-                    <div class="card-image">
-                      <figure class="image is-16by9">
-                        <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${product.id}`" />
-                      </figure>
-                    </div>
-                    <div class="card-content">
-                      <h3 class="title is-5 is-spaced">{{ product.title }}</h3>
-                      <p class="subtitle is-5">{{ product.description }}</p>
-                    </div>
-                  </div>
-                </div>
-              </template>
-
               <template v-if="currentTab === 'photos'">
                 <div class="column is-4">
                   <figure class="image is-square">
@@ -160,7 +140,7 @@ export default {
   },
   data() {
     return {
-      currentTab: 'description',
+      currentTab: 'photos',
       newProduct: {}
     }
   },
@@ -176,9 +156,23 @@ export default {
   created() {
     this.updateProducts()
   },
+  mounted() {
+    const initKaspi = function(d, s, id) {
+      let js = null
+      let kjs = null
+      if (d.getElementById(id)) return
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://kaspi.kz/kaspibutton/widget/ks-wi_ext.js'
+      kjs = document.getElementsByTagName(s)[0]
+      kjs.parentNode.insertBefore(js, kjs)
+    }
+    initKaspi(document, 'script', 'KS-Widget')
+    window.ksWidgetInitializer.reinit()
+  },
   methods: {
     showImage() {
-      this.$refs.viewer.$viewer.show()
+      this.$refs.mainImage.$viewer.show()
     },
     updateProducts() {
       const products = JSON.parse(localStorage.getItem('products')) || []

@@ -3,7 +3,7 @@
     <section class="section">
       <div class="container">
         <div class="catalog">
-          <div v-if="!isLoading && products.length" class="columns is-multiline is-variable is-4">
+          <div v-if="!isLoading && newProducts.length" class="columns is-multiline is-variable is-4">
             <div v-if="games && monitors" class="column is-full">
               <div class="columns is-multiline is-centered">
                 <div class="column is-8 is-centered">
@@ -221,29 +221,38 @@ export default {
         }
       },
       deep: true
+    },
+    products: {
+      handler(val) {
+        if (val.length) {
+          this.initKaspi()
+          this.updateProducts(val)
+        }
+      }
     }
-  },
-  mounted() {
-    const initKaspi = function(d, s, id) {
-      let js = null
-      let kjs = null
-      if (d.getElementById(id)) return
-      js = d.createElement(s)
-      js.id = id
-      js.src = 'https://kaspi.kz/kaspibutton/widget/ks-wi_ext.js'
-      kjs = document.getElementsByTagName(s)[0]
-      kjs.parentNode.insertBefore(js, kjs)
-    }
-    initKaspi(document, 'script', 'KS-Widget')
-    window.ksWidgetInitializer.reinit()
   },
   created() {
     this.$store.dispatch('editIsLoading', true)
-    this.updateProducts(this.products)
     this.fetchGames()
     this.fetchMonitors()
   },
   methods: {
+    async initKaspi() {
+      if (process.client) {
+        const initKaspi = await function(d, s, id) {
+          let js = null
+          let kjs = null
+          if (d.getElementById(id)) return
+          js = d.createElement(s)
+          js.id = id
+          js.src = 'https://kaspi.kz/kaspibutton/widget/ks-wi_ext.js'
+          kjs = document.getElementsByTagName(s)[0]
+          kjs.parentNode.insertBefore(js, kjs)
+        }
+        initKaspi(document, 'script', 'KS-Widget')
+        window.ksWidgetInitializer.reinit()
+      }
+    },
     async fetchFps(categoryId, gameId, monitorId) {
       const response = await this.$axios.get(`fps-filter/${categoryId}/${gameId}/${monitorId}`)
       if (response.data.length) {
