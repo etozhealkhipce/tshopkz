@@ -25,7 +25,7 @@
                       <div class="custom-select">
                         <select id="monitors" v-model="fpsFilter.monitor">
                           <option v-for="(monitor, index) in monitors" :key="`monitor-${index}`" :value="monitor.id">{{
-                            monitor.name
+                            monitor.value
                           }}</option>
                         </select>
                       </div>

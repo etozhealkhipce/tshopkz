@@ -153,9 +153,9 @@
               <img class="logo" src="../../static/logo.svg" alt />
             </nuxt-link>
           </div>
-          <div class="navbar__block burger-wrapper column is-1">
+          <!-- <div class="navbar__block burger-wrapper column is-1">
             <span class="icon-basket"></span>
-          </div>
+          </div> -->
           <div class="burger-wrapper column is-6">
             <div class="burger" @click="showNavbar = !showNavbar">
               <span class="burger__first-element"></span>
@@ -164,7 +164,6 @@
             </div>
           </div>
         </div>
-        <div class="columns"></div>
       </div>
     </div>
   </header>

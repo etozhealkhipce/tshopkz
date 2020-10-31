@@ -38,8 +38,11 @@ export default {
   },
   data: () => ({
     swiperOption: {
-      direction: 'vertical',
+      direction: 'horizontal',
       height: 700,
+      autoplay: {
+        delay: 2000
+      },
       pagination: {
         // el: '.swiper-pagination'
         // type: 'bullets'
@@ -59,6 +62,7 @@ export default {
 <style lang="scss" scoped>
 .swiper {
   &-slide {
+    height: 700px;
     display: flex;
     align-items: center;
 
