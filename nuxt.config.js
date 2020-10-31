@@ -3,9 +3,8 @@ require('dotenv').config()
 export default {
   pageTransition: 'page',
   router: {
-    // base: process.env.MODE === 'dev' ? '/' : '/tshop'
+    prefetchLinks: false
   },
-  mode: process.env.MODE === 'dev' ? 'universal' : 'spa',
   /*
    ** Headers of the page
    */
@@ -25,7 +24,15 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#fff' },
+  loading: { color: '#e22028' },
+  render: {
+    resourceHints: false
+  },
+  splitChunks: {
+    layouts: true,
+    pages: true,
+    commons: true
+  },
   /*
    ** Global CSS
    */
@@ -37,7 +44,10 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/vuelidate', '~/plugins/viewer'],
+  plugins: [
+    { src: '~/plugins/vuelidate', ssr: false, mode: 'client' },
+    { src: '~/plugins/viewer', ssr: false, mode: 'client' }
+  ],
   /*
    ** Nuxt.js dev-modules
    */
@@ -53,13 +63,25 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/axios', '@nuxtjs/bulma', '@nuxtjs/dotenv', '@nuxtjs/auth', 'vue-scrollto/nuxt'],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/bulma',
+    '@nuxtjs/dotenv',
+    '@nuxtjs/auth',
+    'vue-scrollto/nuxt',
+    [
+      'nuxt-imagemin',
+      {
+        optipng: { optimizationLevel: 5 },
+        gifsicle: { optimizationLevel: 2 }
+      }
+    ]
+  ],
   /*
    ** Build configuration
    */
   build: {
     // publicPath: process.env.MODE === 'dev' ? '/' : '/tshop',
-    vendor: ['axios', 'vuelidate'],
     postcss: {
       preset: {
         features: {
@@ -67,10 +89,11 @@ export default {
         }
       }
     },
+    cache: true,
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, { isServer, isDev, isClient }) {}
   },
   axios: {
     baseURL: process.env.API_URL
