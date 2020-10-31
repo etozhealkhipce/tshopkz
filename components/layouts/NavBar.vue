@@ -153,10 +153,10 @@
               <img class="logo" src="../../static/logo.svg" alt />
             </nuxt-link>
           </div>
-          <!-- <div class="navbar__block burger-wrapper column is-1">
-            <span class="icon-basket"></span>
-          </div> -->
-          <div class="burger-wrapper column is-6">
+          <div class="navbar__block burger-wrapper column">
+            <span class="icon__basket"></span>
+          </div>
+          <div class="burger-wrapper column">
             <div class="burger" @click="showNavbar = !showNavbar">
               <span class="burger__first-element"></span>
               <span class="burger__second-element"></span>
@@ -526,9 +526,10 @@ export default {
   .navbar_mobile {
     display: block;
     @include horizontal-between;
+    background-color: black;
 
     &__default {
-      padding: 1.5rem;
+      padding: 1rem 1.5rem 0.5rem 1.5rem;
     }
 
     .burger-wrapper {
@@ -537,8 +538,8 @@ export default {
       @include vertical-center;
 
       .burger {
-        width: 2rem;
-        height: 1.5rem;
+        width: 1.5rem;
+        height: 1rem;
         @include horizontal-between;
         flex-direction: column;
         align-items: center;
@@ -546,7 +547,7 @@ export default {
         &__first-element,
         &__second-element,
         &__third-element {
-          height: 3px;
+          height: 2px;
           width: 100%;
           background-color: $white;
         }
