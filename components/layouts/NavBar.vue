@@ -148,16 +148,16 @@
     <div class="navbar_mobile">
       <div class="container">
         <div class="columns is-mobile navbar_mobile__default">
-          <div v-if="!showNavbar" class="logo-search-wrapper column is-6">
+          <div class="logo-search-wrapper column is-6">
             <nuxt-link to="/" class="logo-wrapper">
-              <img class="logo" src="../../static/logo.svg" />
+              <img class="logo" src="../../static/logo.svg" alt />
             </nuxt-link>
           </div>
           <div class="navbar__block burger-wrapper column">
             <span class="icon__basket"></span>
           </div>
           <div class="burger-wrapper column">
-            <div :class="['burger', { burger_open: showNavbar }]" @click="showNavbar = !showNavbar">
+            <div class="burger" @click="showNavbar = !showNavbar">
               <span class="burger__first-element"></span>
               <span class="burger__second-element"></span>
               <span class="burger__third-element"></span>
@@ -530,7 +530,6 @@ export default {
 
     &__default {
       padding: 1rem 1.5rem 0.5rem 1.5rem;
-      min-height: 7.4rem;
     }
 
     .burger-wrapper {
@@ -539,32 +538,18 @@ export default {
       @include vertical-center;
 
       .burger {
-        width: 1.3rem;
+        width: 1.5rem;
+        height: 1rem;
         @include horizontal-between;
         flex-direction: column;
         align-items: center;
-        position: relative;
 
         &__first-element,
         &__second-element,
         &__third-element {
           height: 2px;
-          margin: 3px;
           width: 100%;
           background-color: $white;
-        }
-
-        &_open {
-          .burger__first-element {
-            transform: rotate(45deg);
-          }
-          .burger__third-element {
-            display: none;
-          }
-          .burger__second-element {
-            position: absolute;
-            transform: rotate(-45deg);
-          }
         }
       }
     }
