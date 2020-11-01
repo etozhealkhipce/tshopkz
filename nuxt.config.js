@@ -3,12 +3,8 @@ require('dotenv').config()
 export default {
   pageTransition: 'page',
   router: {
-    // base: process.env.MODE === 'dev' ? '/' : '/tshop'
+    prefetchLinks: false
   },
-  mode: process.env.MODE === 'dev' ? 'universal' : 'spa',
-  /*
-   ** Headers of the page
-   */
   head: {
     title: process.env.npm_package_name || '',
     meta: [
@@ -23,44 +19,43 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
-  /*
-   ** Customize the progress-bar color
-   */
-  loading: { color: '#fff' },
-  /*
-   ** Global CSS
-   */
+  loading: { color: '#e22028' },
+  render: {
+    resourceHints: false
+  },
+  splitChunks: {
+    layouts: true,
+    pages: true,
+    commons: true
+  },
   css: [
     { src: '~/assets/style/main.scss', lang: 'scss' },
     { src: '~/static/fonts/stylesheet.css', lang: 'css' },
     { src: '~/static/icons/style.css', lang: 'css' }
   ],
-  /*
-   ** Plugins to load before mounting the App
-   */
-  plugins: ['~/plugins/vuelidate', '~/plugins/viewer'],
-  /*
-   ** Nuxt.js dev-modules
-   */
-  buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module',
-    '@nuxtjs/style-resources',
-    '@nuxtjs/dotenv'
+  plugins: [
+    { src: '~/plugins/vuelidate', ssr: false, mode: 'client' },
+    { src: '~/plugins/viewer', ssr: false, mode: 'client' }
   ],
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/style-resources', '@nuxtjs/dotenv'],
   styleResources: {
     scss: ['~/assets/style/_mixins.scss', '~/assets/style/_variables.scss']
   },
-  /*
-   ** Nuxt.js modules
-   */
-  modules: ['@nuxtjs/axios', '@nuxtjs/bulma', '@nuxtjs/dotenv', '@nuxtjs/auth', 'vue-scrollto/nuxt'],
-  /*
-   ** Build configuration
-   */
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/bulma',
+    '@nuxtjs/dotenv',
+    '@nuxtjs/auth',
+    'vue-scrollto/nuxt',
+    [
+      'nuxt-imagemin',
+      {
+        optipng: { optimizationLevel: 5 },
+        gifsicle: { optimizationLevel: 2 }
+      }
+    ]
+  ],
   build: {
-    // publicPath: process.env.MODE === 'dev' ? '/' : '/tshop',
-    vendor: ['axios', 'vuelidate'],
     postcss: {
       preset: {
         features: {
@@ -68,10 +63,7 @@ export default {
         }
       }
     },
-    /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {}
+    cache: true
   },
   axios: {
     baseURL: process.env.API_URL
