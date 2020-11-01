@@ -4,7 +4,7 @@
       <div class="location">
         <div class="columns is-multiline location__content">
           <div class="column is-full location__header">
-            <h2 class="title is-3">Выберите свой город</h2>
+            <h2 class="title is-4">Выберите свой город</h2>
             <a to="/" class="icon__close" @click="isModalActive = false"></a>
           </div>
           <div v-for="(city, index) in cities" :key="`city-${index}`" class="column is-3 location__body">
@@ -148,20 +148,114 @@
     <div class="navbar_mobile">
       <div class="container">
         <div class="columns is-mobile navbar_mobile__default">
-          <div class="logo-search-wrapper column is-6">
+          <div v-if="!navbarVisible" class="logo-search-wrapper column is-6">
             <nuxt-link to="/" class="logo-wrapper">
               <img class="logo" src="../../static/logo.svg" alt />
             </nuxt-link>
           </div>
-          <div class="navbar__block burger-wrapper column">
-            <span class="icon__basket"></span>
+          <div v-if="navbarVisible && !isAuthenticated" class="navbar__block burger-wrapper column">
+            <nuxt-link to="/auth" @click.native="showNavbar()">
+              <span class="icon__user"></span>
+            </nuxt-link>
           </div>
-          <div class="burger-wrapper column">
-            <div class="burger" @click="showNavbar = !showNavbar">
+          <div v-else class="navbar__block burger-wrapper column">
+            <nuxt-link to="/account" @click.native="showNavbar()">
+              <span class="icon__user"></span>
+            </nuxt-link>
+          </div>
+          <div v-if="isAuthenticated" class="navbar__block burger-wrapper column">
+            <nuxt-link :to="{ name: 'account', params: { currentTab: 'wishlist' } }" @click.native="showNavbar()">
+              <span class="icon__bookmate"></span>
+            </nuxt-link>
+            ({{ wishlistLength }})
+          </div>
+          <div class="navbar__block burger-wrapper column">
+            <nuxt-link to="/cart" @click.native="showNavbar()">
+              <span class="icon__basket"></span>
+            </nuxt-link>
+            ({{ cartLength }})
+          </div>
+          <div class="burger-wrapper burger-wrapper_close column" @click="showNavbar()">
+            <div :class="['burger', { burger_open: navbarVisible }]">
               <span class="burger__first-element"></span>
               <span class="burger__second-element"></span>
               <span class="burger__third-element"></span>
             </div>
+          </div>
+        </div>
+        <div v-if="navbarVisible" class="columns is-multiline navbar_mobile__body">
+          <div class="column is-full">
+            <div class="navbar__block city-wrapper" @click="isModalActive = true">
+              <a class="city">
+                Ваш город:
+                <span class="city__name">{{ currentCity.name }}</span>
+              </a>
+            </div>
+          </div>
+          <div class="column is-ful">
+            <div class="field has-addons search-wrapper">
+              <div class="control">
+                <input v-model="search" class="custom-input search" type="text" placeholder="Найти..." />
+              </div>
+              <div class="control">
+                <a class="button button_red is-info" @click.prevent="goToSearch">Поиск</a>
+              </div>
+            </div>
+          </div>
+          <div class="column is-full">
+            <aside class="menu">
+              <template v-for="(category, index) in categories">
+                <p
+                  :key="`title-${index}`"
+                  class="menu-label title is-5"
+                  :to="`/category/${category.slug}`"
+                  @click="setMobileFourthNav(index)"
+                >
+                  {{ category.title.slice(0, 7) }}
+                </p>
+                <ul
+                  v-if="
+                    fourthNavVisible &&
+                      categoryIndex === index &&
+                      categories.length !== 0 &&
+                      categories[categoryIndex].subcategories.length !== 0
+                  "
+                  :key="`subcategories-${index}`"
+                  class="menu-list"
+                >
+                  <li>
+                    <nuxt-link
+                      v-for="(subcategory, index) in categories[categoryIndex].subcategories"
+                      :key="`subcategory-${index}`"
+                      no-prefetch
+                      class="list__item"
+                      :to="`/category/${subcategory.slug}`"
+                      @click.native="showNavbar()"
+                      >{{ subcategory.title.slice(0, 5) }}</nuxt-link
+                    >
+                  </li>
+                </ul>
+              </template>
+            </aside>
+            <hr />
+          </div>
+          <div class="column is-full navbar_mobile__footer">
+            <ul>
+              <li v-scroll-to="'#footer'" class="list__item subtitle is-6" @click="showNavbar()">Контакты</li>
+              <li class="subtitle is-6 list__item">
+                <nuxt-link to="/stocks" @click.native="showNavbar()">Акции</nuxt-link>
+              </li>
+              <li class="subtitle is-6 list__item">
+                <nuxt-link to="/wholesale" @click.native="showNavbar()">Для оптовых продаж</nuxt-link>
+              </li>
+              <li class="subtitle is-6 list__item" @click="goToAnchor('#faq')">FAQ</li>
+              <li class="subtitle is-6 list__item">
+                <nuxt-link to="/tradein" @click.native="showNavbar()">TRADE-IN</nuxt-link>
+              </li>
+              <li class="subtitle is-6 list__item">
+                <nuxt-link to="/configurator" @click.native="showNavbar()">Конфигуратор</nuxt-link>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -184,7 +278,7 @@ export default {
     return {
       categoryIndex: 0,
       fourthNavVisible: false,
-      showNavbar: false,
+      navbarVisible: false,
       isModalActive: false,
       currentCity: {
         name: 'Нур-Султан',
@@ -233,9 +327,26 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    showNavbar() {
+      this.navbarVisible = !this.navbarVisible
+      const body = document.querySelector('body')
+      if (this.navbarVisible) {
+        body.style.height = '100vh'
+      } else {
+        body.style.heigth = '100%'
+      }
+    },
     setFourthNav(index, visible) {
       this.categoryIndex = index
       this.fourthNavVisible = visible
+    },
+    setMobileFourthNav(index) {
+      if (this.categoryIndex === index && this.fourthNavVisible) {
+        this.fourthNavVisible = false
+      } else {
+        this.categoryIndex = index
+        this.fourthNavVisible = true
+      }
     },
     async fetchWishlist() {
       try {
@@ -245,6 +356,7 @@ export default {
       }
     },
     goToAnchor(anchor) {
+      this.showNavbar()
       if (this.$route.path !== '/') {
         this.$router.push({ name: 'index' })
         setTimeout(() => {
@@ -269,10 +381,13 @@ export default {
     },
     goToSearch() {
       try {
+        this.showNavbar()
         this.$store.dispatch('results.page/fetchResults', this.search)
         this.$router.push('/results')
       } catch (error) {
         console.log(error)
+      } finally {
+        this.search = ''
       }
     }
   }
@@ -288,9 +403,11 @@ export default {
   &__header {
     @include horizontal-between;
     @include vertical-center;
+    margin-bottom: 1.5rem;
 
     .title {
       display: inline;
+      margin-bottom: 0;
     }
 
     [class^='icon__'],
@@ -488,14 +605,14 @@ export default {
   .cart-wrapper {
     @include horizontal-end;
   }
+}
 
-  .city-wrapper {
-    .city {
+.city-wrapper {
+  .city {
+    color: #4a4a4a;
+    &__name {
       color: $white;
-      &__name {
-        color: $white;
-        font-weight: bold;
-      }
+      font-weight: bold;
     }
   }
 }
@@ -528,14 +645,55 @@ export default {
     @include horizontal-between;
     background-color: black;
 
-    &__default {
+    &__default,
+    &__body {
       padding: 1rem 1.5rem 0.5rem 1.5rem;
     }
 
+    &__default {
+      min-height: 135px;
+    }
+
+    &__body {
+      height: 90vh;
+      overflow-y: scroll;
+      background: black;
+      padding-bottom: 5rem;
+
+      .menu {
+        .title {
+          color: white;
+        }
+
+        &-list {
+          .list__item {
+            color: white;
+          }
+        }
+      }
+
+      hr {
+        margin: 1.5rem 0 1.5rem 0 !important;
+      }
+    }
+
+    &__footer {
+      .list__item {
+        color: #47484e;
+        a {
+          color: #47484e;
+        }
+      }
+    }
+
     .burger-wrapper {
-      cursor: pointer;
-      @include horizontal-end;
+      @include horizontal-center;
       @include vertical-center;
+
+      &_close {
+        position: relative;
+        @include horizontal-end;
+      }
 
       .burger {
         width: 1.5rem;

@@ -157,18 +157,22 @@ export default {
     this.updateProducts()
   },
   mounted() {
-    const initKaspi = function(d, s, id) {
-      let js = null
-      let kjs = null
-      if (d.getElementById(id)) return
-      js = d.createElement(s)
-      js.id = id
-      js.src = 'https://kaspi.kz/kaspibutton/widget/ks-wi_ext.js'
-      kjs = document.getElementsByTagName(s)[0]
-      kjs.parentNode.insertBefore(js, kjs)
+    try {
+      const initKaspi = function(d, s, id) {
+        let js = null
+        let kjs = null
+        if (d.getElementById(id)) return
+        js = d.createElement(s)
+        js.id = id
+        js.src = 'https://kaspi.kz/kaspibutton/widget/ks-wi_ext.js'
+        kjs = document.getElementsByTagName(s)[0]
+        kjs.parentNode.insertBefore(js, kjs)
+      }
+      initKaspi(document, 'script', 'KS-Widget')
+      window.ksWidgetInitializer.reinit()
+    } catch (error) {
+      console.log(error)
     }
-    initKaspi(document, 'script', 'KS-Widget')
-    window.ksWidgetInitializer.reinit()
   },
   methods: {
     showImage() {

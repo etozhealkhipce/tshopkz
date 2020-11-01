@@ -44,7 +44,7 @@
 
         <div class="column is-full footer__end">
           <p class="subtitle is-6 has-text-centered">
-            © 2020 TSHOPKZ - производство и продажа премиум компьютеров. Все права защищены.
+            © 2010-2020 TSHOPKZ - производство и продажа премиум компьютеров. Все права защищены.
           </p>
           <p class="subtitle is-6 has-text-centered">
             |
