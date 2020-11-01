@@ -232,6 +232,7 @@ export default {
   },
   created() {
     this.$store.dispatch('editIsLoading', true)
+
     this.fetchGames()
     this.fetchMonitors()
   },
