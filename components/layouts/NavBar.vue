@@ -158,7 +158,7 @@
               <span class="icon__user"></span>
             </nuxt-link>
           </div>
-          <div v-else class="navbar__block burger-wrapper column">
+          <div v-else-if="navbarVisible" class="navbar__block burger-wrapper column">
             <nuxt-link to="/account" @click.native="showNavbar()">
               <span class="icon__user"></span>
             </nuxt-link>
@@ -696,18 +696,32 @@ export default {
       }
 
       .burger {
-        width: 1.5rem;
-        height: 1rem;
+        width: 1.3rem;
         @include horizontal-between;
         flex-direction: column;
         align-items: center;
+        position: relative;
 
         &__first-element,
         &__second-element,
         &__third-element {
           height: 2px;
+          margin: 3px;
           width: 100%;
           background-color: $white;
+        }
+
+        &_open {
+          .burger__first-element {
+            transform: rotate(45deg);
+          }
+          .burger__third-element {
+            display: none;
+          }
+          .burger__second-element {
+            position: absolute;
+            transform: rotate(-45deg);
+          }
         }
       }
     }
