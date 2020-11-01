@@ -1,8 +1,8 @@
 {
   "name": "tshop",
   "version": "1.0.0",
-  "description": "My hunky-dory Nuxt.js project",
-  "author": "Ilya Dyomin",
+  "description": "Интернет-магазин игровых компьютеров tshop.kz",
+  "author": "вейкап.kz",
   "private": true,
   "scripts": {
     "dev": "nuxt",

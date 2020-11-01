@@ -25,6 +25,9 @@ export default {
     MainInstagramFeed,
     MainProgress,
     MainAskedQuestions
+  },
+  head: {
+    title: 'Главная | Интернет—магазин t-shop.kz'
   }
 }
 </script>

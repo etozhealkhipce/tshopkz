@@ -16,7 +16,11 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head: {
+    title: 'Успешная регистрация | Интернет—магазин t-shop.kz'
+  }
+}
 </script>
 
 <style lang="scss">

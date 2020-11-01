@@ -5,7 +5,7 @@
         <div class="columns is-multiline is-centered is-vcentered">
           <div class="column is-full auth__header">
             <a class="icon__back" @click.prevent="$emit('isRegister')"></a>
-            <h2 class="title is-3 has-text-centered">Регистрация</h2>
+            <h2 class="title is-4 has-text-centered">Регистрация</h2>
             <nuxt-link to="/" class="icon__close"></nuxt-link>
           </div>
 

@@ -24,7 +24,11 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head: {
+    title: 'Заказ оформлен! | Интернет—магазин t-shop.kz'
+  }
+}
 </script>
 
 <style lang="scss">

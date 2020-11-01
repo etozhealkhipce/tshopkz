@@ -374,6 +374,9 @@ export default {
         required
       }
     }
+  },
+  head: {
+    title: 'Trade-In | Интернет—магазин t-shop.kz'
   }
 }
 </script>

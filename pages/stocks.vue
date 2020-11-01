@@ -190,6 +190,9 @@ export default {
 
       this.updateProducts()
     }
+  },
+  head: {
+    title: 'Акционные товары | Интернет—магазин t-shop.kz'
   }
 }
 </script>

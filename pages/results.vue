@@ -92,6 +92,9 @@ export default {
     photoPath() {
       return `${this.$store.state.photoPath}storage`
     }
+  },
+  head: {
+    title: 'Результаты поиска | Интернет—магазин t-shop.kz'
   }
 }
 </script>

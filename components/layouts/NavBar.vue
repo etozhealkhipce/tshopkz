@@ -154,23 +154,23 @@
             </nuxt-link>
           </div>
           <div v-if="navbarVisible && !isAuthenticated" class="navbar__block burger-wrapper column">
-            <nuxt-link to="/auth" @click.native="showNavbar()">
+            <nuxt-link to="/auth" @click.native="closeNavbar()">
               <span class="icon__user"></span>
             </nuxt-link>
           </div>
           <div v-else-if="navbarVisible" class="navbar__block burger-wrapper column">
-            <nuxt-link to="/account" @click.native="showNavbar()">
+            <nuxt-link to="/account" @click.native="closeNavbar()">
               <span class="icon__user"></span>
             </nuxt-link>
           </div>
           <div v-if="isAuthenticated" class="navbar__block burger-wrapper column">
-            <nuxt-link :to="{ name: 'account', params: { currentTab: 'wishlist' } }" @click.native="showNavbar()">
+            <nuxt-link :to="{ name: 'account', params: { currentTab: 'wishlist' } }" @click.native="closeNavbar()">
               <span class="icon__bookmate"></span>
             </nuxt-link>
             ({{ wishlistLength }})
           </div>
           <div class="navbar__block burger-wrapper column">
-            <nuxt-link to="/cart" @click.native="showNavbar()">
+            <nuxt-link to="/cart" @click.native="closeNavbar()">
               <span class="icon__basket"></span>
             </nuxt-link>
             ({{ cartLength }})
@@ -230,7 +230,7 @@
                       no-prefetch
                       class="list__item"
                       :to="`/category/${subcategory.slug}`"
-                      @click.native="showNavbar()"
+                      @click.native="closeNavbar()"
                       >{{ subcategory.title.slice(0, 5) }}</nuxt-link
                     >
                   </li>
@@ -241,19 +241,19 @@
           </div>
           <div class="column is-full navbar_mobile__footer">
             <ul>
-              <li v-scroll-to="'#footer'" class="list__item subtitle is-6" @click="showNavbar()">Контакты</li>
+              <li v-scroll-to="'#footer'" class="list__item subtitle is-6" @click="closeNavbar()">Контакты</li>
               <li class="subtitle is-6 list__item">
-                <nuxt-link to="/stocks" @click.native="showNavbar()">Акции</nuxt-link>
+                <nuxt-link to="/stocks" @click.native="closeNavbar()">Акции</nuxt-link>
               </li>
               <li class="subtitle is-6 list__item">
-                <nuxt-link to="/wholesale" @click.native="showNavbar()">Для оптовых продаж</nuxt-link>
+                <nuxt-link to="/wholesale" @click.native="closeNavbar()">Для оптовых продаж</nuxt-link>
               </li>
               <li class="subtitle is-6 list__item" @click="goToAnchor('#faq')">FAQ</li>
               <li class="subtitle is-6 list__item">
-                <nuxt-link to="/tradein" @click.native="showNavbar()">TRADE-IN</nuxt-link>
+                <nuxt-link to="/tradein" @click.native="closeNavbar()">TRADE-IN</nuxt-link>
               </li>
               <li class="subtitle is-6 list__item">
-                <nuxt-link to="/configurator" @click.native="showNavbar()">Конфигуратор</nuxt-link>
+                <nuxt-link to="/configurator" @click.native="closeNavbar()">Конфигуратор</nuxt-link>
               </li>
             </ul>
           </div>
@@ -335,6 +335,11 @@ export default {
       } else {
         body.style.heigth = '100%'
       }
+    },
+    closeNavbar() {
+      this.navbarVisible = false
+      const body = document.querySelector('body')
+      body.style.heigth = '100%'
     },
     setFourthNav(index, visible) {
       this.categoryIndex = index
@@ -697,6 +702,7 @@ export default {
 
       .burger {
         width: 1.3rem;
+        padding-bottom: 0.3rem;
         @include horizontal-between;
         flex-direction: column;
         align-items: center;

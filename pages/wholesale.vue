@@ -60,6 +60,9 @@ export default {
         console.log(error)
       }
     }
+  },
+  head: {
+    title: 'Оптовые продажи | Интернет—магазин t-shop.kz'
   }
 }
 </script>

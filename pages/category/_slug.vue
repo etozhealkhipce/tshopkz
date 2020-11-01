@@ -212,7 +212,6 @@ export default {
       return this.$store.state.isLoading
     }
   },
-
   watch: {
     fpsFilter: {
       handler(val) {
@@ -276,18 +275,20 @@ export default {
       this.newProducts = this.products.slice()
     },
     updateProducts(defaultProducts) {
-      const products = JSON.parse(localStorage.getItem('products')) || []
-      this.newProducts = []
-      this.$set(this, ['newProducts'], defaultProducts)
+      if (process.client) {
+        const products = JSON.parse(localStorage.getItem('products')) || []
+        this.newProducts = []
+        this.$set(this, ['newProducts'], defaultProducts)
 
-      this.newProducts.forEach((vuexProduct) => {
-        products.forEach((cartProduct) => {
-          if (vuexProduct.id === cartProduct.id) {
-            vuexProduct.copy = true
-          }
+        this.newProducts.forEach((vuexProduct) => {
+          products.forEach((cartProduct) => {
+            if (vuexProduct.id === cartProduct.id) {
+              vuexProduct.copy = true
+            }
+          })
         })
-      })
-      this.$store.dispatch('editIsLoading', false)
+        this.$store.dispatch('editIsLoading', false)
+      }
     },
     async addToWishlist(id) {
       const request = {
@@ -321,6 +322,9 @@ export default {
 
       this.updateProducts(this.products)
     }
+  },
+  head: {
+    title: 'Каталог | Интернет—магазин t-shop.kz'
   }
 }
 </script>

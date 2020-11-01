@@ -754,6 +754,9 @@ export default {
       })
     }
   },
+  head: {
+    title: 'Корзина | Интернет—магазин t-shop.kz'
+  },
   validations: {
     order: {
       client_type: {

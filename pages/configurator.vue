@@ -198,7 +198,6 @@ export default {
   components: {
     Preloader
   },
-  layout: 'empty',
   data() {
     return {
       currentCatId: '',
@@ -305,7 +304,11 @@ export default {
 
       this.$router.push('cart')
     }
-  }
+  },
+  head: {
+    title: 'Конфигуратор | Интернет—магазин t-shop.kz'
+  },
+  layout: 'empty'
 }
 </script>
 

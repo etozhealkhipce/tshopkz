@@ -71,9 +71,6 @@ import { required } from 'vuelidate/lib/validators'
 import loaders from '~/mixins/loaders'
 
 export default {
-  middleware: ['auth'],
-  auth: 'guest',
-  layout: 'empty',
   mixins: [loaders],
   data() {
     return {
@@ -103,6 +100,12 @@ export default {
       }
     }
   },
+  head: {
+    title: 'Восстановление пароля | Интернет—магазин t-shop.kz'
+  },
+  middleware: ['auth'],
+  auth: 'guest',
+  layout: 'empty',
   validations: {
     newPassword: {
       required

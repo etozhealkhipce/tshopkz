@@ -179,14 +179,16 @@ export default {
       this.$refs.mainImage.$viewer.show()
     },
     updateProducts() {
-      const products = JSON.parse(localStorage.getItem('products')) || []
-      this.newProduct = Object.assign(this.product)
+      if (process.client) {
+        const products = JSON.parse(localStorage.getItem('products')) || []
+        this.newProduct = Object.assign(this.product)
 
-      products.forEach((cartProduct) => {
-        if (cartProduct.id === this.product.id) {
-          this.newProduct.copy = true
-        }
-      })
+        products.forEach((cartProduct) => {
+          if (cartProduct.id === this.product.id) {
+            this.newProduct.copy = true
+          }
+        })
+      }
     },
     addToCart(item) {
       const products = JSON.parse(localStorage.getItem('products')) || []
@@ -208,6 +210,9 @@ export default {
 
       this.updateProducts()
     }
+  },
+  head: {
+    title: 'Подробности | Интернет—магазин t-shop.kz'
   }
 }
 </script>

@@ -418,7 +418,6 @@ const phoneValidator = helpers.regex('phoneValidator', /^((8|\+7)[\- ]?)?(\(?\d{
 
 export default {
   mixins: [loaders],
-  middleware: ['auth'],
   data() {
     return {
       emailSent: false,
@@ -441,6 +440,7 @@ export default {
       password: ''
     }
   },
+  middleware: ['auth'],
   computed: {
     ...mapGetters(['isAuthenticated', 'loggedInUser']),
     wishlist() {
@@ -638,6 +638,9 @@ export default {
       required,
       minLength: minLength(8)
     }
+  },
+  head: {
+    title: 'Личный кабинет | Интернет—магазин t-shop.kz'
   }
 }
 </script>

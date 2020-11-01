@@ -16,9 +16,6 @@ import Register from '@/components/auth/Register'
 import Restore from '@/components/auth/Restore'
 
 export default {
-  middleware: ['auth'],
-  auth: 'guest',
-  layout: 'empty',
   components: {
     Login,
     Register,
@@ -31,7 +28,13 @@ export default {
     }
   },
 
-  methods: {}
+  methods: {},
+  head: {
+    title: 'Авторизация | Интернет—магазин t-shop.kz'
+  },
+  middleware: ['auth'],
+  auth: 'guest',
+  layout: 'empty'
 }
 </script>
 

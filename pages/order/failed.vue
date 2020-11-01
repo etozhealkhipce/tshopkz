@@ -16,7 +16,11 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head: {
+    title: 'Ошибка при офомлении заказа! | Интернет—магазин t-shop.kz'
+  }
+}
 </script>
 
 <style lang="scss">
