@@ -7,8 +7,8 @@
         </div>
 
         <template>
-          <div v-for="(category, index) in categories.slice(0, 3)" :key="`category-${index}`" class="column is-2">
-            <h3 class="title is-5">{{ category.title.slice(0, 7) }}</h3>
+          <div v-for="(category, index) in categories" :key="`category-${index}`" class="column is-2">
+            <h3 class="title is-5">{{ category.title }}</h3>
             <ul class="list">
               <nuxt-link
                 v-for="(subcategory, index) in category.subcategories"
@@ -16,7 +16,7 @@
                 no-prefetch
                 class="list__item"
                 :to="`/category/${subcategory.slug}`"
-                >{{ subcategory.title.slice(0, 5) }}</nuxt-link
+                >{{ subcategory.title }}</nuxt-link
               >
             </ul>
           </div>
@@ -48,7 +48,7 @@
           </p>
           <p class="subtitle is-6 has-text-centered">
             |
-            <a v-for="(doc, index) in docs" :key="`doc-${index}`" :href="doc.file"
+            <a v-for="(doc, index) in docs" :key="`doc-${index}`" @click="downloadDoc(doc)"
               >{{ doc.name }} <span class="divider">| </span>
             </a>
           </p>
@@ -59,6 +59,8 @@
 </template>
 
 <script>
+import { saveAs } from 'file-saver'
+
 export default {
   data() {
     return {
@@ -87,6 +89,9 @@ export default {
   computed: {
     categories() {
       return this.$store.getters['categories/getCategories']
+    },
+    apiPath() {
+      return this.$store.state.apiPath
     }
   },
   created() {
@@ -110,6 +115,12 @@ export default {
     async fetchDocs() {
       const response = await this.$axios.get('/docs')
       this.docs = response.data
+    },
+    downloadDoc(doc) {
+      const fileLink = this.apiPath + JSON.parse(doc.file)[0].download_link
+      const fileName = JSON.parse(doc.file)[0].original_name
+
+      saveAs(fileLink, fileName)
     }
   }
 }

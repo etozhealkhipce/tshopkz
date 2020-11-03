@@ -29,7 +29,9 @@ export const actions = {
       const subcategories = await this.$axios.get(`/categories/${category.slug}/subcategories`)
       newCategory.subcategories = subcategories.data.data
 
-      categories.push(newCategory)
+      if (!newCategory.parent_id) {
+        categories.push(newCategory)
+      }
     }
 
     commit('ADD_CATEGORIES', categories)

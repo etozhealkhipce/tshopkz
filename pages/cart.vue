@@ -17,7 +17,7 @@
                         <article class="tile is-child">
                           <nuxt-link :to="`/product/${product.slug}`">
                             <figure class="image is-4by3">
-                              <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${index}`" />
+                              <img :src="`${apiPath}/${product.main_img}`" :alt="`product-${index}`" />
                             </figure>
                           </nuxt-link>
                         </article>
@@ -575,8 +575,8 @@ export default {
     cities() {
       return this.$store.state.cities
     },
-    photoPath() {
-      return `${this.$store.state.photoPath}storage`
+    apiPath() {
+      return `${this.$store.state.apiPath}storage`
     }
   },
   created() {

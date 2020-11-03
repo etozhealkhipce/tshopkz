@@ -111,7 +111,7 @@
                 class="list__item"
                 :to="`/category/${category.slug}`"
                 @mouseenter.native="setFourthNav(index, true)"
-                >{{ category.title.slice(0, 7) }}</nuxt-link
+                >{{ category.title }}</nuxt-link
               >
             </ul>
           </div>
@@ -136,7 +136,7 @@
                   no-prefetch
                   class="list__item"
                   :to="`/category/${subcategory.slug}`"
-                  >{{ subcategory.title.slice(0, 5) }}</nuxt-link
+                  >{{ subcategory.title }}</nuxt-link
                 >
               </ul>
             </div>
@@ -211,7 +211,7 @@
                   :to="`/category/${category.slug}`"
                   @click="setMobileFourthNav(index)"
                 >
-                  {{ category.title.slice(0, 7) }}
+                  {{ category.title }}
                 </p>
                 <ul
                   v-if="
@@ -231,7 +231,7 @@
                       class="list__item"
                       :to="`/category/${subcategory.slug}`"
                       @click.native="closeNavbar()"
-                      >{{ subcategory.title.slice(0, 5) }}</nuxt-link
+                      >{{ subcategory.title }}</nuxt-link
                     >
                   </li>
                 </ul>

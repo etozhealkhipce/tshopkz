@@ -1,6 +1,6 @@
 export const state = () => ({
   isLoading: false,
-  photoPath: process.env.FULL_URL,
+  apiPath: process.env.FULL_URL,
   cities: [
     {
       name: 'Алматы',

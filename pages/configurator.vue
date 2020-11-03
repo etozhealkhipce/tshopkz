@@ -30,7 +30,7 @@
                             :key="`radioS-${index}`"
                             v-model="currentCatId"
                             :value="category.id"
-                            :disabled="category.slug !== 'motherboards' && !products[0]"
+                            :disabled="category.slug === 'motherboards' && !products[category.id]"
                             name="radioS"
                             class="radio"
                             type="radio"
@@ -62,18 +62,19 @@
                                 <input
                                   :id="`radio-${index}`"
                                   :key="`radio-${index}`"
-                                  v-model="products[catIndex]"
-                                  :value="product.id"
+                                  v-model="products[category.id]"
+                                  :value="product"
                                   name="radio"
                                   class="radio"
                                   type="radio"
+                                  @change="productsWatchTrigger += 1"
                                 />
                                 <span class="radiomark"></span>
                               </label>
                             </div>
                             <div class="column">
                               <figure class="image is-128x128">
-                                <img :src="`${photoPath}/${product.main_img}`" />
+                                <img :src="`${apiPath}/${product.main_img}`" />
                               </figure>
                             </div>
                             <div class="column is-6">
@@ -91,7 +92,10 @@
                             <div class="column">
                               <p class="subtitle is-6 table-price">
                                 {{
-                                  parseInt(product.price)
+                                  Math.round(
+                                    parseInt(product.price) -
+                                      (parseInt(product.sale || 0) / 100) * parseInt(product.price)
+                                  )
                                     .toString()
                                     .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
                                 }}
@@ -111,7 +115,7 @@
                     <div class="card-image">
                       <figure class="image is-square">
                         <img
-                          :src="`${photoPath}/${paramsProduct.product.main_img}`"
+                          :src="`${apiPath}/${paramsProduct.product.main_img}`"
                           :alt="`product-${paramsProduct.product.id}`"
                         />
                       </figure>
@@ -129,32 +133,29 @@
                         тг.
                       </p> -->
                       <p class="price subtitle is-4">
-                        Стоимость:
+                        Общая стоимость сборки:
                         {{
-                          Math.round(
-                            parseInt(paramsProduct.product.price) -
-                              (parseInt(paramsProduct.product.sale || 0) / 100) * parseInt(paramsProduct.product.price)
-                          )
+                          Math.round(parseInt(totalPrice))
                             .toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
                         }}
-                        тг.
+                        тенге
                       </p>
-                      <p v-if="paramsProduct.product.sale" class="price subtitle is-4">
+                      <!-- <p v-if="paramsProduct.product.sale" class="price subtitle is-4">
                         Скидка:
                         <span class="green">
                           {{ paramsProduct.product.sale }}
                           %
                         </span>
-                      </p>
+                      </p> -->
 
                       <ul>
                         <li
-                          v-for="(productInProduct, index) in paramsProduct.productsInProduct"
+                          v-for="(productInProduct, index) in products"
                           :key="`productInProduct-${index}`"
                           class="card-content__part"
                         >
-                          <span class="card-content__part_name subtitle is-6">{{ productInProduct.id }}</span>
+                          <!-- <span class="card-content__part_name subtitle is-6">{{ productInProduct.id }}</span> -->
                           <span class="subtitle is-5">{{ productInProduct.title }}</span>
                           <hr />
                         </li>
@@ -166,9 +167,9 @@
                             <button
                               v-if="!paramsProduct.product.copy"
                               class="button button_red"
-                              @click.prevent="addToCart(paramsProduct.product)"
+                              @click.prevent="addToCart()"
                             >
-                              Купить
+                              В корзину
                             </button>
                             <button v-else class="button">Уже в корзине</button>
                           </div>
@@ -203,6 +204,8 @@ export default {
       currentCatId: '',
 
       products: {},
+      productsWatchTrigger: 0,
+      totalPrice: 0,
 
       paramsProduct: {
         product: null,
@@ -216,33 +219,50 @@ export default {
     isLoading() {
       return this.$store.state.isLoading
     },
-    photoPath() {
-      return `${this.$store.state.photoPath}storage`
+    apiPath() {
+      return `${this.$store.state.apiPath}storage`
     }
   },
   watch: {
-    products: {
+    productsWatchTrigger: {
       handler(val) {
-        if (this.products[0] && this.products[1]) {
-          this.check(this.products[0], this.products[1])
+        const motherboardsId = this.categories.filter((category) => category.slug === 'motherboards')
+
+        if (motherboardsId[0] && motherboardsId[0].id) {
+          this.check(motherboardsId[0].id)
+        }
+
+        this.totalPrice = 0
+        for (const key in this.products) {
+          if (this.products[key] && this.products[key].price) {
+            this.totalPrice +=
+              parseInt(this.products[key].price) -
+              (parseInt(this.products[key].sale || 0) / 100) * parseInt(this.products[key].price)
+          }
         }
       },
-      deep: true
+      immediate: true
     }
   },
   created() {
     this.fetchCategories()
   },
   methods: {
-    async check(firstId, secondId) {
-      const products = {
-        0: firstId,
-        1: secondId
+    async check(motherboardsId) {
+      for (const key in this.products) {
+        if (this.products[motherboardsId].id !== this.products[key].id) {
+          console.log(this.products[motherboardsId])
+          console.log(this.products[key])
+
+          const products = {
+            0: this.products[motherboardsId].id,
+            1: this.products[key].id
+          }
+
+          const response = await this.$axios.post('constructor/check', products)
+          console.log(response)
+        }
       }
-
-      const response = await this.$axios.post('constructor/check', products)
-
-      console.log(response)
     },
 
     async fetchCategories() {
@@ -251,10 +271,11 @@ export default {
       const response = await this.$axios.get('constructor/categories')
       this.categories = response.data
 
-      this.currentCatId = response.data[0].id
-      // this.categories.forEach((category, index) => {
-      //   this.products[index] = null
-      // })
+      this.categories.forEach((category) => {
+        if (category.slug === 'motherboards') {
+          this.currentCatId = category.id
+        }
+      })
 
       if (this.$route.params.product) {
         const product = this.$route.params.product
@@ -269,11 +290,13 @@ export default {
       const response = await this.$axios.get(`constructor/product/${id}`)
       this.paramsProduct.productsInProduct = response.data
 
+      // todo
       this.paramsProduct.productsInProduct.forEach((paramsProduct) => {
         this.categories.forEach((category, index) => {
-          category.products.forEach((product) => {
-            if (paramsProduct.id === product.id) {
-              product.checked = true
+          category.products.forEach((catProduct) => {
+            if (paramsProduct.id === catProduct.id) {
+              this.products[category.id] = catProduct
+              this.productsWatchTrigger += 1
             }
           })
         })
@@ -284,24 +307,25 @@ export default {
     checkProductId(id) {
       return this.paramsProduct.productsId.includes(id)
     },
-    addToCart(item) {
+    addToCart() {
       const products = JSON.parse(localStorage.getItem('products')) || []
 
-      let copy = false
+      for (const key in this.products) {
+        let copy = false
 
-      products.forEach((element) => {
-        if (element.id === item.id) {
-          copy = true
+        products.forEach((element) => {
+          if (element.id === this.products[key].id) {
+            copy = true
+          }
+        })
+
+        if (!copy) {
+          products.push(this.products[key])
         }
-      })
-
-      if (!copy) {
-        products.push(item)
       }
 
       localStorage.setItem('products', JSON.stringify(products))
       this.$store.dispatch('cart/addCartProducts', localStorage.getItem('products'))
-
       this.$router.push('cart')
     }
   },

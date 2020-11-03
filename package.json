@@ -20,6 +20,7 @@
     "file-saver": "^2.0.2",
     "nanogram.js": "^1.0.2",
     "nuxt": "2.12.2",
+    "nuxt-imagemin": "^1.0.0",
     "swiper": "^5.4.1",
     "v-viewer": "^1.5.1",
     "vue-awesome-swiper": "^4.1.1",

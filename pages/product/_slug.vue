@@ -26,7 +26,7 @@
                       url: 'data-source'
                     }"
                   >
-                    <img :src="`${photoPath}/${product.main_img}`" :data-source="`${photoPath}/${product.main_img}`" />
+                    <img :src="`${apiPath}/${product.main_img}`" :data-source="`${apiPath}/${product.main_img}`" />
                   </div>
                 </figure>
               </div>
@@ -76,6 +76,11 @@
                     ></div>
                   </div>
                   <div class="column is-6">
+                    <a href="http://sb.homecredit.kz/instagram/new/elmuratov" target="_blank" class="button">
+                      Кредит Homebank
+                    </a>
+                  </div>
+                  <div class="column is-6">
                     <button class="button">Собрать эту модель</button>
                   </div>
                 </div>
@@ -91,7 +96,7 @@
               <template v-if="currentTab === 'photos'">
                 <div class="column is-4">
                   <figure class="image is-square">
-                    <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${product.id}`" />
+                    <img :src="`${apiPath}/${product.main_img}`" :alt="`product-${product.id}`" />
                   </figure>
                 </div>
               </template>
@@ -148,8 +153,8 @@ export default {
     product() {
       return this.$store.getters['product/getProduct']
     },
-    photoPath() {
-      return `${this.$store.state.photoPath}storage`
+    apiPath() {
+      return `${this.$store.state.apiPath}storage`
     },
     ...mapGetters(['isAuthenticated', 'loggedInUser'])
   },

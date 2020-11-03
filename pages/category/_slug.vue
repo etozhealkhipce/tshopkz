@@ -49,16 +49,12 @@
               <span class="subtitle is-5" @click="sortProducts('cheap')">Сортировка по цене</span>
             </div>
             <template v-for="(product, index) in newProducts">
-              <div
-                v-if="product.status !== 'do-not-show' && product.in_stock !== 'no'"
-                :key="`product-${index}`"
-                class="column is-4"
-              >
+              <div :key="`product-${index}`" class="column is-4">
                 <nuxt-link :to="`/product/${product.slug}`">
                   <div class="card">
                     <div class="card-image">
                       <figure class="image is-square">
-                        <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${index}`" />
+                        <img :src="`${apiPath}/${product.main_img}`" :alt="`product-${index}`" />
                       </figure>
                     </div>
                     <div class="card-content">
@@ -146,6 +142,11 @@
                               data-style="mobile"
                             ></div>
                           </div>
+                          <div class="column is-fulll">
+                            <a href="http://sb.homecredit.kz/instagram/new/elmuratov" target="_blank" class="button">
+                              Кредит Homebank
+                            </a>
+                          </div>
                           <div class="column is-full">
                             <button class="button">Подробнее</button>
                           </div>
@@ -162,7 +163,12 @@
               </div>
             </template>
           </div>
-          <Preloader v-else />
+          <Preloader v-else-if="isLoading" />
+          <div v-else class="columns">
+            <div class="column">
+              <h1 class="title is-1">Категория пуста</h1>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -204,8 +210,8 @@ export default {
     wishlist() {
       return this.$store.state.account.wishlist
     },
-    photoPath() {
-      return `${this.$store.state.photoPath}storage`
+    apiPath() {
+      return `${this.$store.state.apiPath}storage`
     },
     ...mapGetters(['isAuthenticated', 'loggedInUser']),
     isLoading() {
@@ -280,6 +286,9 @@ export default {
         const products = JSON.parse(localStorage.getItem('products')) || []
         this.newProducts = []
         this.$set(this, ['newProducts'], defaultProducts)
+        this.newProducts = this.newProducts.filter(
+          (product) => product.status !== 'do-not-show' && product.aviability !== 'unaviable'
+        )
 
         this.newProducts.forEach((vuexProduct) => {
           products.forEach((cartProduct) => {

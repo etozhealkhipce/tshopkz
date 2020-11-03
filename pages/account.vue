@@ -229,7 +229,7 @@
                       <div class="card-image">
                         <figure class="image is-square">
                           <p class="power title is-3">84</p>
-                          <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${index}`" />
+                          <img :src="`${apiPath}/${product.main_img}`" :alt="`product-${index}`" />
                         </figure>
                       </div>
                       <div class="card-content">
@@ -449,8 +449,8 @@ export default {
     orders() {
       return this.$store.state.account.orders
     },
-    photoPath() {
-      return `${this.$store.state.photoPath}storage`
+    apiPath() {
+      return `${this.$store.state.apiPath}storage`
     }
   },
   created() {

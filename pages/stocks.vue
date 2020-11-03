@@ -17,7 +17,7 @@
                   <div class="card">
                     <div class="card-image">
                       <figure class="image is-square">
-                        <img :src="`${photoPath}/${product.main_img}`" :alt="`product-${index}`" />
+                        <img :src="`${apiPath}/${product.main_img}`" :alt="`product-${index}`" />
                       </figure>
                     </div>
                     <div class="card-content">
@@ -140,8 +140,8 @@ export default {
       return this.$store.state['results.page'].results
     },
     ...mapGetters(['isAuthenticated', 'loggedInUser']),
-    photoPath() {
-      return `${this.$store.state.photoPath}storage`
+    apiPath() {
+      return `${this.$store.state.apiPath}storage`
     }
   },
   methods: {
