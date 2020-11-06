@@ -180,6 +180,75 @@
                       </div>
                     </div>
                   </div>
+                  <div v-else class="card">
+                    <div class="card-image">
+                      <!-- <figure class="image is-square">
+                        <img
+                          :src="`${apiPath}/${paramsProduct.product.main_img}`"
+                          :alt="`product-${paramsProduct.product.id}`"
+                        />
+                      </figure> -->
+                    </div>
+                    <div class="card-content">
+                      <hr />
+                      <h3 class="card-content__main-title title is-4 is-spaced">Новая сборка</h3>
+                      <!-- <p class="bank-price subtitle is-6">
+                        Рассрочка:
+                        {{
+                          Math.floor(paramsProduct.product.price * 0.3)
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                        }}
+                        тг.
+                      </p> -->
+                      <p class="price subtitle is-4">
+                        Общая стоимость сборки:
+                        {{
+                          Math.round(parseInt(totalPrice))
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                        }}
+                        тенге
+                      </p>
+                      <!-- <p v-if="paramsProduct.product.sale" class="price subtitle is-4">
+                        Скидка:
+                        <span class="green">
+                          {{ paramsProduct.product.sale }}
+                          %
+                        </span>
+                      </p> -->
+
+                      <ul>
+                        <li
+                          v-for="(productInProduct, index) in products"
+                          :key="`productInProduct-${index}`"
+                          class="card-content__part"
+                        >
+                          <!-- <span class="card-content__part_name subtitle is-6">{{ productInProduct.id }}</span> -->
+                          <span class="subtitle is-5">{{ productInProduct.title }}</span>
+                          <hr />
+                        </li>
+                      </ul>
+
+                      <div class="card-content__buttons">
+                        <div class="card-content__buttons_header columns is-multiline">
+                          <div class="column is-full">
+                            <button
+                              v-if="Object.keys[products].length && !paramsProduct.product.copy"
+                              class="button button_red"
+                              @click.prevent="addToCart()"
+                            >
+                              В корзину
+                            </button>
+                            <button v-else class="button">Уже в корзине</button>
+                          </div>
+                          <div class="column is-full">
+                            <button class="button">Сохранить сборку</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </article>
               </div>
             </div>
