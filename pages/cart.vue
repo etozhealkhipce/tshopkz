@@ -704,6 +704,34 @@ export default {
             ]
           })
 
+          if (this.order.payment_type === 'loan') {
+            const params = new URLSearchParams()
+            params.append('partner_id', '010856')
+            params.append('sales_place', '050000')
+            params.append('access_token', 'Elmuratov123')
+            params.append('amount', this.totalPrice)
+            params.append('order_no', response.data.id)
+            params.append('firstname', this.order.name)
+            params.append('lastname', this.order.second_name)
+            params.append('mobile_number', this.order.phone)
+            params.append('is_delivery', this.order.delivery_type === 'delivery' ? '1' : '0')
+
+            this.productsArr.forEach((product, index) => {
+              params.append(`good[${index}][commodity_type]`, product.categories[0].title)
+              params.append(`good[${index}][producer]`, product.categories[0].title)
+              params.append(`good[${index}][model]`, product.description)
+              params.append(`good[${index}][price]`, product.price)
+              params.append(`good[${index}][image]`, this.apiPath + product.main_img)
+            })
+
+            const homebankResponse = await this.$axios.post(
+              'https://e-loan-test.homecredit.kz/rest/requests/create',
+              params
+            )
+
+            console.log(homebankResponse)
+          }
+
           localStorage.removeItem('products')
           this.$store.dispatch('cart/addCartProducts', localStorage.getItem('products'))
           this.$forceUpdate()

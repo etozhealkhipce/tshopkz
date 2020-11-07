@@ -94,28 +94,26 @@
             </div>
             <div class="columns is-multiline">
               <template v-if="currentTab === 'photos'">
-                <div class="column is-4">
+                <div v-for="(image, index) in JSON.parse(product.images)" :key="`image-${index}`" class="column is-4">
                   <figure class="image is-square">
-                    <img :src="`${apiPath}/${product.main_img}`" :alt="`product-${product.id}`" />
+                    <img :src="`${apiPath}/${image}`" :alt="`product-${product.title}`" />
                   </figure>
                 </div>
               </template>
 
-              <template v-if="currentTab === 'specification'">
+              <template
+                v-if="
+                  currentTab === 'specification' &&
+                    product &&
+                    product.attribute_values &&
+                    product.attribute_values.length
+                "
+              >
                 <div class="column is-full">
                   <table class="table is-hoverable is-fullwidth">
                     <tbody>
-                      <tr>
-                        <th>Test</th>
-                        <td>Qualification for the</td>
-                      </tr>
-                      <tr>
-                        <th>Test</th>
-                        <td>Qualification for the</td>
-                      </tr>
-                      <tr>
-                        <th>Test</th>
-                        <td>Qualification for the</td>
+                      <tr v-for="(attribute, index) in product.attribute_values" :key="`part-${index}`">
+                        <th>{{ attribute.value }}</th>
                       </tr>
                     </tbody>
                   </table>

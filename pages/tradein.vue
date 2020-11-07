@@ -3,6 +3,17 @@
     <section class="section">
       <div class="container">
         <div class="tradein">
+          <template v-if="orderInfo">
+            <div class="columns is-multiline is-centered">
+              <div class="column is-full">
+                <h2 class="title is-3 has-text-centered is-spaced green">Спасибо!</h2>
+                <p class="subtitle has-text-centered is-5 middlegray">Мы уже рассматриваем ваше предложение!</p>
+                <p class="subtitle has-text-centered is-5 green">
+                  Наши менеджеры свяжутся с вами в ближайшее время!
+                </p>
+              </div>
+            </div>
+          </template>
           <template v-if="tradeInAttributes && !isLoading">
             <div class="columns">
               <div class="column is-6">
@@ -195,6 +206,12 @@
                         </span>
                       </label>
                     </div>
+                    <span
+                      v-if="!$v.order.images.required && $v.order.images.$error"
+                      class="red subtitle is-6 error__subtitle"
+                    >
+                      Обязательное поле
+                    </span>
                   </div>
                   <div class="column is-full">
                     <button :class="['button button_red', { 'is-loading': isLoading }]" @click.prevent="sendOrder()">
@@ -204,18 +221,6 @@
                 </div>
               </div>
             </div>
-
-            <template v-if="orderInfo">
-              <div class="columns is-multiline is-centered">
-                <div class="column is-full">
-                  <h2 class="title is-3 has-text-centered is-spaced green">Спасибо!</h2>
-                  <p class="subtitle has-text-centered is-5 middlegray">Мы уже рассматриваем ваше предложение!</p>
-                  <p class="subtitle has-text-centered is-5 green">
-                    Наши менеджеры свяжутся с вами в ближайшее время!
-                  </p>
-                </div>
-              </div>
-            </template>
           </template>
           <Preloader v-else />
         </div>
@@ -310,6 +315,7 @@ export default {
     },
     async sendOrder() {
       try {
+        this.orderInfo = false
         this.editIsLoading(true)
 
         this.$v.$touch()
@@ -371,6 +377,9 @@ export default {
         email
       },
       phone: {
+        required
+      },
+      images: {
         required
       }
     }

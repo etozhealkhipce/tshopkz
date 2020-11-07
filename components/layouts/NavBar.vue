@@ -313,7 +313,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchWishlist()
+    if (this.isAuthenticated) this.fetchWishlist()
     this.$store.dispatch('cart/addCartProducts', localStorage.getItem('products'))
 
     JSON.parse(localStorage.getItem('city'))

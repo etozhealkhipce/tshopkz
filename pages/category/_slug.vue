@@ -109,16 +109,16 @@
                         </span>
                       </p>
 
-                      <template v-if="product && product.product_parts && product.product_parts.length">
+                      <template v-if="product && product.attribute_values && product.attribute_values.length">
                         <hr />
                         <ul>
                           <li
-                            v-for="(part, index) in product.product_parts"
+                            v-for="(attribute, index) in product.attribute_values"
                             :key="`part-${index}`"
                             class="card-content__part"
                           >
-                            <span class="card-content__part_name subtitle is-6">{{ part.title }}</span>
-                            <span class="subtitle is-5">{{ part.description }}</span>
+                            <span class="card-content__part_name subtitle is-6">{{ attribute.value }}</span>
+                            <!-- <span class="subtitle is-5">{{ part.description }}</span> -->
                           </li>
                         </ul>
                         <hr />
