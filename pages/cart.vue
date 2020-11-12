@@ -500,6 +500,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { required, email } from 'vuelidate/lib/validators'
 import loaders from '~/mixins/loaders'
 
@@ -577,12 +578,25 @@ export default {
     },
     apiPath() {
       return `${this.$store.state.apiPath}storage`
-    }
+    },
+    ...mapGetters(['isAuthenticated', 'loggedInUser'])
   },
   created() {
     if (process.browser) {
       const products = JSON.parse(localStorage.getItem('products')) || []
       this.createCartData(products)
+    }
+
+    if (this.isAuthenticated) {
+      this.order.name = this.loggedInUser.name || ''
+      this.order.second_name = this.loggedInUser.second_name || ''
+      this.order.middle_name = this.loggedInUser.middle_name || ''
+      this.order.email = this.loggedInUser.email || ''
+      this.order.phone = this.loggedInUser.phone || ''
+      this.order.city = this.loggedInUser.city || ''
+      this.order.street = this.loggedInUser.street || ''
+      this.order.house = this.loggedInUser.house || ''
+      this.order.flat = this.loggedInUser.flat || ''
     }
   },
   methods: {
@@ -704,39 +718,18 @@ export default {
             ]
           })
 
-          if (this.order.payment_type === 'loan') {
-            const params = new URLSearchParams()
-            params.append('partner_id', '010856')
-            params.append('sales_place', '050000')
-            params.append('access_token', 'Elmuratov123')
-            params.append('amount', this.totalPrice)
-            params.append('order_no', response.data.id)
-            params.append('firstname', this.order.name)
-            params.append('lastname', this.order.second_name)
-            params.append('mobile_number', this.order.phone)
-            params.append('is_delivery', this.order.delivery_type === 'delivery' ? '1' : '0')
-
-            this.productsArr.forEach((product, index) => {
-              params.append(`good[${index}][commodity_type]`, product.categories[0].title)
-              params.append(`good[${index}][producer]`, product.categories[0].title)
-              params.append(`good[${index}][model]`, product.description)
-              params.append(`good[${index}][price]`, product.price)
-              params.append(`good[${index}][image]`, this.apiPath + product.main_img)
-            })
-
-            const homebankResponse = await this.$axios.post(
-              'https://e-loan-test.homecredit.kz/rest/requests/create',
-              params
-            )
-
-            console.log(homebankResponse)
+          if (this.order.payment_type === 'online') {
+            window.open(response.data, '_self')
+          } else if (this.order.payment_type === 'loan') {
+            console.log(response)
+          } else {
+            this.orderInfo = response.data
           }
 
           localStorage.removeItem('products')
           this.$store.dispatch('cart/addCartProducts', localStorage.getItem('products'))
           this.$forceUpdate()
 
-          this.orderInfo = response.data
           this.scrollTop()
         }
         this.$store.dispatch('editIsLoading', false)
@@ -944,7 +937,7 @@ export default {
 
         .card-content {
           &__main-title {
-            margin-top: 1.4rem !important;
+            margin-top: 1.5rem !important;
           }
         }
       }

@@ -14,8 +14,8 @@ import { createStore } from './store.js'
 
 import nuxt_plugin_vuescrollto_62b3aa20 from 'nuxt_plugin_vuescrollto_62b3aa20' // Source: .\\vue-scrollto.js (mode: 'client')
 import nuxt_plugin_axios_3aafb7c9 from 'nuxt_plugin_axios_3aafb7c9' // Source: .\\axios.js (mode: 'all')
-import nuxt_plugin_vuelidate_4345260a from 'nuxt_plugin_vuelidate_4345260a' // Source: ..\\plugins\\vuelidate (mode: 'client')
-import nuxt_plugin_viewer_316d45f0 from 'nuxt_plugin_viewer_316d45f0' // Source: ..\\plugins\\viewer (mode: 'client')
+import nuxt_plugin_vuelidate_4345260a from 'nuxt_plugin_vuelidate_4345260a' // Source: ..\\plugins\\vuelidate (mode: 'all')
+import nuxt_plugin_viewer_316d45f0 from 'nuxt_plugin_viewer_316d45f0' // Source: ..\\plugins\\viewer (mode: 'all')
 import nuxt_plugin_plugin_05beecb8 from 'nuxt_plugin_plugin_05beecb8' // Source: .\\auth\\plugin.js (mode: 'all')
 
 // Component: <ClientOnly>
@@ -186,11 +186,11 @@ async function createApp (ssrContext) {
     await nuxt_plugin_axios_3aafb7c9(app.context, inject)
   }
 
-  if (process.client && typeof nuxt_plugin_vuelidate_4345260a === 'function') {
+  if (typeof nuxt_plugin_vuelidate_4345260a === 'function') {
     await nuxt_plugin_vuelidate_4345260a(app.context, inject)
   }
 
-  if (process.client && typeof nuxt_plugin_viewer_316d45f0 === 'function') {
+  if (typeof nuxt_plugin_viewer_316d45f0 === 'function') {
     await nuxt_plugin_viewer_316d45f0(app.context, inject)
   }
 

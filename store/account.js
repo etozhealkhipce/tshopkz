@@ -1,6 +1,7 @@
 export const state = () => ({
   wishlist: [],
-  orders: []
+  orders: [],
+  configs: []
 })
 
 export const mutations = {
@@ -9,6 +10,9 @@ export const mutations = {
   },
   ADD_ORDERS(state, orders) {
     state.orders = orders
+  },
+  ADD_CONFIGS(state, configs) {
+    state.configs = configs
   }
 }
 export const actions = {
@@ -19,6 +23,10 @@ export const actions = {
   async fetchOrders({ commit }) {
     const response = await this.$axios.get('/user/orders')
     commit('ADD_ORDERS', response.data)
+  },
+  async fetchConfigs({ commit }) {
+    const response = await this.$axios.get('/user/configs')
+    commit('ADD_CONFIGS', response.data)
   }
 }
 export const getters = {

@@ -316,7 +316,18 @@
                 </template>
               </div>
 
-              <div v-if="currentTab === 'configs'" class="columns is-multiline"></div>
+              <div v-if="currentTab === 'configs'" class="columns is-multiline">
+                <template v-if="Object.keys(configs).length !== 0">
+                  <div v-for="(config, index) in configs" :key="`order-${index}`" class="column is-6">
+                    {{ config }}
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="column is-full">
+                    <h2 class="subtitle is-4">Конфигурации не добавлены</h2>
+                  </div>
+                </template>
+              </div>
 
               <div v-if="currentTab === 'orders'" class="columns is-multiline">
                 <template v-if="Object.keys(orders).length !== 0">
@@ -448,6 +459,9 @@ export default {
     },
     orders() {
       return this.$store.state.account.orders
+    },
+    configs() {
+      return this.$store.state.account.configs
     },
     apiPath() {
       return `${this.$store.state.apiPath}storage`

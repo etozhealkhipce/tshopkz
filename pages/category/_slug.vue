@@ -132,20 +132,15 @@
                             </button>
                             <button v-else class="button">Уже в корзине</button>
                           </div>
-                          <div class="column is-full">
+                          <div v-if="product.data_merchant_sku" class="column is-full">
                             <div
                               class="ks-widget"
                               data-template="flatButton"
-                              data-merchant-sku="83284"
+                              :data-merchant-sku="product.data_merchant_sku"
                               data-merchant-code="Sulpak"
-                              data-city="750000000"
+                              data-city="710000000"
                               data-style="mobile"
                             ></div>
-                          </div>
-                          <div class="column is-fulll">
-                            <a href="http://sb.homecredit.kz/instagram/new/elmuratov" target="_blank" class="button">
-                              Кредит Homebank
-                            </a>
                           </div>
                           <div class="column is-full">
                             <button class="button">Подробнее</button>
@@ -201,6 +196,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['isAuthenticated']),
     category() {
       return this.$store.getters['categories/getCurrentCategory']
     },
@@ -213,7 +209,6 @@ export default {
     apiPath() {
       return `${this.$store.state.apiPath}storage`
     },
-    ...mapGetters(['isAuthenticated', 'loggedInUser']),
     isLoading() {
       return this.$store.state.isLoading
     }
@@ -245,18 +240,22 @@ export default {
   methods: {
     async initKaspi() {
       if (process.client) {
-        const initKaspi = await function(d, s, id) {
-          let js = null
-          let kjs = null
-          if (d.getElementById(id)) return
-          js = d.createElement(s)
-          js.id = id
-          js.src = 'https://kaspi.kz/kaspibutton/widget/ks-wi_ext.js'
-          kjs = document.getElementsByTagName(s)[0]
-          kjs.parentNode.insertBefore(js, kjs)
+        try {
+          const initKaspi = await function(d, s, id) {
+            let js = null
+            let kjs = null
+            if (d.getElementById(id)) return
+            js = d.createElement(s)
+            js.id = id
+            js.src = 'https://kaspi.kz/kaspibutton/widget/ks-wi_ext.js'
+            kjs = document.getElementsByTagName(s)[0]
+            kjs.parentNode.insertBefore(js, kjs)
+          }
+          initKaspi(document, 'script', 'KS-Widget')
+          window.ksWidgetInitializer.reinit()
+        } catch (error) {
+          console.log(error)
         }
-        initKaspi(document, 'script', 'KS-Widget')
-        window.ksWidgetInitializer.reinit()
       }
     },
     async fetchFps(categoryId, gameId, monitorId) {

@@ -65,20 +65,15 @@
                     </button>
                     <button v-else class="button">Уже в корзине</button>
                   </div>
-                  <div class="column is-6">
+                  <div v-if="product.data_merchant_sku" class="column is-6">
                     <div
                       class="ks-widget"
                       data-template="flatButton"
-                      data-merchant-sku="83284"
+                      :data-merchant-sku="product.data_merchant_sku"
                       data-merchant-code="Sulpak"
-                      data-city="750000000"
+                      data-city="710000000"
                       data-style="mobile"
                     ></div>
-                  </div>
-                  <div class="column is-6">
-                    <a href="http://sb.homecredit.kz/instagram/new/elmuratov" target="_blank" class="button">
-                      Кредит Homebank
-                    </a>
                   </div>
                   <div class="column is-6">
                     <button class="button">Собрать эту модель</button>

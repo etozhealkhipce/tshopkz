@@ -105,14 +105,16 @@
         <div class="navbar__floor columns is-gapless">
           <div class="navbar__block column">
             <ul class="list">
-              <nuxt-link
-                v-for="(category, index) in categories"
-                :key="`category-${index}`"
-                class="list__item"
-                :to="`/category/${category.slug}`"
-                @mouseenter.native="setFourthNav(index, true)"
-                >{{ category.title }}</nuxt-link
-              >
+              <template v-for="(category, index) in categories">
+                <nuxt-link
+                  v-if="!category.constructor_status"
+                  :key="`category-${index}`"
+                  class="list__item"
+                  :to="`/category/${category.slug}`"
+                  @mouseenter.native="setFourthNav(index, true)"
+                  >{{ category.title }}</nuxt-link
+                >
+              </template>
             </ul>
           </div>
 
@@ -291,7 +293,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'loggedInUser']),
+    ...mapGetters(['isAuthenticated']),
     categories() {
       return this.$store.getters['categories/getCategories']
     },
