@@ -944,7 +944,7 @@ export default {
 
         .card-content {
           &__main-title {
-            margin-top: 1.5rem !important;
+            margin-top: 1.4rem !important;
           }
         }
       }
