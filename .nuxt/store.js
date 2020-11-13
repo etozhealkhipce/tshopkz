@@ -20,7 +20,6 @@ let store = {};
   resolveStoreModules(require('..\\store\\categories.js'), 'categories.js')
   resolveStoreModules(require('..\\store\\main.page.js'), 'main.page.js')
   resolveStoreModules(require('..\\store\\product.js'), 'product.js')
-  resolveStoreModules(require('..\\store\\results.page.js'), 'results.page.js')
 
   // If the environment supports hot reloading...
 })()

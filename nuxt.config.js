@@ -91,6 +91,7 @@ export default {
           }
         }
       }
-    }
+    },
+    plugins: [{ src: '~/plugins/axios.js', ssr: false }]
   }
 }

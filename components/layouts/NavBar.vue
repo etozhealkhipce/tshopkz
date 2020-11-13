@@ -107,7 +107,7 @@
             <ul class="list">
               <template v-for="(category, index) in categories">
                 <nuxt-link
-                  v-if="!category.constructor_status"
+                  v-if="category.constructor_status === 'no'"
                   :key="`category-${index}`"
                   class="list__item"
                   :to="`/category/${category.slug}`"
@@ -207,36 +207,38 @@
           <div class="column is-full">
             <aside class="menu">
               <template v-for="(category, index) in categories">
-                <p
-                  :key="`title-${index}`"
-                  class="menu-label title is-5"
-                  :to="`/category/${category.slug}`"
-                  @click="setMobileFourthNav(index)"
-                >
-                  {{ category.title }}
-                </p>
-                <ul
-                  v-if="
-                    fourthNavVisible &&
-                      categoryIndex === index &&
-                      categories.length !== 0 &&
-                      categories[categoryIndex].subcategories.length !== 0
-                  "
-                  :key="`subcategories-${index}`"
-                  class="menu-list"
-                >
-                  <li>
-                    <nuxt-link
-                      v-for="(subcategory, index) in categories[categoryIndex].subcategories"
-                      :key="`subcategory-${index}`"
-                      no-prefetch
-                      class="list__item"
-                      :to="`/category/${subcategory.slug}`"
-                      @click.native="closeNavbar()"
-                      >{{ subcategory.title }}</nuxt-link
-                    >
-                  </li>
-                </ul>
+                <template v-if="category.constructor_status === 'no'">
+                  <p
+                    :key="`title-${index}`"
+                    class="menu-label title is-5"
+                    :to="`/category/${category.slug}`"
+                    @click="setMobileFourthNav(index)"
+                  >
+                    {{ category.title }}
+                  </p>
+                  <ul
+                    v-if="
+                      fourthNavVisible &&
+                        categoryIndex === index &&
+                        categories.length !== 0 &&
+                        categories[categoryIndex].subcategories.length !== 0
+                    "
+                    :key="`subcategories-${index}`"
+                    class="menu-list"
+                  >
+                    <li>
+                      <nuxt-link
+                        v-for="(subcategory, index) in categories[categoryIndex].subcategories"
+                        :key="`subcategory-${index}`"
+                        no-prefetch
+                        class="list__item"
+                        :to="`/category/${subcategory.slug}`"
+                        @click.native="closeNavbar()"
+                        >{{ subcategory.title }}</nuxt-link
+                      >
+                    </li>
+                  </ul>
+                </template>
               </template>
             </aside>
             <hr />
@@ -315,6 +317,8 @@ export default {
     }
   },
   mounted() {
+    // await this.$auth.fetchUser()
+
     if (this.isAuthenticated) this.fetchWishlist()
     this.$store.dispatch('cart/addCartProducts', localStorage.getItem('products'))
 

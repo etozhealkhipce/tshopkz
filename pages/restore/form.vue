@@ -7,7 +7,7 @@
             <div class="auth">
               <div class="columns is-multiline is-centered is-vcentered">
                 <div class="column is-full auth__header">
-                  <h2 class="title is-3 has-text-centered">Восстановление пароля</h2>
+                  <h2 class="title is-4 has-text-centered">Восстановление пароля</h2>
                   <nuxt-link to="/" class="icon__close"></nuxt-link>
                 </div>
 
@@ -15,13 +15,50 @@
                   <div class="column is-6 auth__form">
                     <div class="field">
                       <p class="control has-icons-left has-icons-right">
+                        <label class="label" for="name">E-mail</label>
+                        <input v-model.trim="$v.email.$model" name="email" class="custom-input" type="text" />
+                        <span
+                          v-if="(!$v.email.required || !$v.email.email) && $v.email.$error"
+                          class="red subtitle is-6 error__subtitle"
+                        >
+                          Неверный формат или поле не заполнено
+                        </span>
+                      </p>
+                    </div>
+                    <div class="field">
+                      <p class="control has-icons-left has-icons-right">
                         <label class="label" for="name">Новый пароль</label>
-                        <input v-model.trim="$v.newPassword.$model" name="email" class="custom-input" type="text" />
+                        <input
+                          v-model.trim="$v.newPassword.$model"
+                          name="newPassword"
+                          class="custom-input"
+                          type="password"
+                        />
                         <span
                           v-if="!$v.newPassword.required && $v.newPassword.$error"
                           class="red subtitle is-6 error__subtitle"
                         >
                           Обязательное поле
+                        </span>
+                      </p>
+                    </div>
+                    <div class="field">
+                      <p class="control has-icons-left has-icons-right">
+                        <label class="label" for="name">Повторите пароль</label>
+                        <input
+                          v-model.trim="$v.confirmNewPassword.$model"
+                          name="confirmNewPassword"
+                          class="custom-input"
+                          type="password"
+                        />
+                        <span
+                          v-if="
+                            (!$v.confirmNewPassword.required || !$v.confirmNewPassword.sameAs) &&
+                              $v.confirmNewPassword.$error
+                          "
+                          class="red subtitle is-6 error__subtitle"
+                        >
+                          Пароли не совпадают или поле не заполнено
                         </span>
                       </p>
                     </div>
@@ -67,14 +104,16 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators'
+import { required, sameAs, email } from 'vuelidate/lib/validators'
 import loaders from '~/mixins/loaders'
 
 export default {
   mixins: [loaders],
   data() {
     return {
+      email: '',
       newPassword: '',
+      confirmNewPassword: '',
 
       newPasswordSent: false,
       error: false
@@ -87,16 +126,19 @@ export default {
         if (!this.$v.$invalid) {
           this.$store.dispatch('editIsLoading', true)
 
-          await this.$axios.post('password/email', {
-            email: this.email
+          await this.$axios.post('password/reset', {
+            email: this.email,
+            token: this.$route.query.token,
+            password: this.newPassword,
+            confirm_password: this.confirmNewPassword
           })
 
           this.emailSent = true
-          this.$store.dispatch('editIsLoading', false)
         }
       } catch (error) {
-        this.$store.dispatch('editIsLoading', false)
         this.error = error
+      } finally {
+        this.$store.dispatch('editIsLoading', false)
       }
     }
   },
@@ -109,6 +151,14 @@ export default {
   validations: {
     newPassword: {
       required
+    },
+    confirmNewPassword: {
+      required,
+      sameAs: sameAs('newPassword')
+    },
+    email: {
+      required,
+      email
     }
   }
 }

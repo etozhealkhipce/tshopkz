@@ -721,7 +721,11 @@ export default {
           if (this.order.payment_type === 'online') {
             window.open(response.data, '_self')
           } else if (this.order.payment_type === 'loan') {
-            console.log(response)
+            if (response.data.attributes && response.data.attributes.error_code) {
+              throw new Error('Ошибка, попробуйте позднее!')
+            } else {
+              window.open(response.data.attributes.url, '_self')
+            }
           } else {
             this.orderInfo = response.data
           }
@@ -732,9 +736,10 @@ export default {
 
           this.scrollTop()
         }
-        this.$store.dispatch('editIsLoading', false)
       } catch {
         this.error = 'Ошибка, попробуйте позднее!'
+      } finally {
+        this.$store.dispatch('editIsLoading', false)
       }
     },
     removeFromCart(id) {

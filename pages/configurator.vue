@@ -174,7 +174,7 @@
                             <button v-else class="button">Уже в корзине</button>
                           </div>
                           <div class="column is-full">
-                            <button class="button">Сохранить сборку</button>
+                            <button class="button" @click="create()">Сохранить сборку</button>
                           </div>
                         </div>
                       </div>
@@ -233,14 +233,9 @@
                       <div class="card-content__buttons">
                         <div class="card-content__buttons_header columns is-multiline">
                           <div class="column is-full">
-                            <button
-                              v-if="Object.keys[products].length && !paramsProduct.product.copy"
-                              class="button button_red"
-                              @click.prevent="addToCart()"
-                            >
+                            <button class="button button_red" @click.prevent="addToCart()">
                               В корзину
                             </button>
-                            <button v-else class="button">Уже в корзине</button>
                           </div>
                           <div class="column is-full">
                             <button class="button">Сохранить сборку</button>
@@ -318,19 +313,35 @@ export default {
   },
   methods: {
     async check(motherboardsId) {
-      for (const key in this.products) {
-        if (this.products[motherboardsId].id !== this.products[key].id) {
-          console.log(this.products[motherboardsId])
-          console.log(this.products[key])
+      try {
+        for (const key in this.products) {
+          if (this.products[motherboardsId].id !== this.products[key].id) {
+            console.log(this.products[motherboardsId])
+            console.log(this.products[key])
 
-          const products = {
-            0: this.products[motherboardsId].id,
-            1: this.products[key].id
+            const products = {
+              0: this.products[motherboardsId].id,
+              1: this.products[key].id
+            }
+
+            await this.$axios.post('constructor/check', products)
           }
-
-          const response = await this.$axios.post('constructor/check', products)
-          console.log(response)
         }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async create() {
+      try {
+        const products = {}
+
+        for (const key in this.products) {
+          products[key] = this.products[key].id
+        }
+        await this.$axios.post('constructor/create', products)
+      } catch (error) {
+        console.log(error)
       }
     },
 

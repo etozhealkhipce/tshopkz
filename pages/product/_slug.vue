@@ -70,7 +70,7 @@
                       class="ks-widget"
                       data-template="flatButton"
                       :data-merchant-sku="product.data_merchant_sku"
-                      data-merchant-code="Sulpak"
+                      data-merchant-code="Tshopkz"
                       data-city="710000000"
                       data-style="mobile"
                     ></div>

@@ -213,7 +213,7 @@
                   <li :class="{ 'is-active': currentTab === 'wishlist' }" @click="currentTab = 'wishlist'">
                     <a>Избранное</a>
                   </li>
-                  <li :class="{ 'is-active': currentTab === 'configs' }" @click="currentTab = 'configs'">
+                  <li :class="{ 'is-active': currentTab === 'constructors' }" @click="currentTab = 'constructors'">
                     <a>Мои конфигурации</a>
                   </li>
                   <li :class="{ 'is-active': currentTab === 'orders' }" @click="currentTab = 'orders'">
@@ -316,10 +316,10 @@
                 </template>
               </div>
 
-              <div v-if="currentTab === 'configs'" class="columns is-multiline">
-                <template v-if="Object.keys(configs).length !== 0">
-                  <div v-for="(config, index) in configs" :key="`order-${index}`" class="column is-6">
-                    {{ config }}
+              <div v-if="currentTab === 'constructors'" class="columns is-multiline">
+                <template v-if="Object.keys(constructors).length !== 0">
+                  <div v-for="(construstor, index) in constructors" :key="`order-${index}`" class="column is-6">
+                    {{ construstor }}
                   </div>
                 </template>
                 <template v-else>
@@ -407,7 +407,7 @@
                 </template>
                 <template v-else>
                   <div class="column is-full">
-                    <h2 class="subtitle is-4">Продукты не добавлены</h2>
+                    <h2 class="subtitle is-4">Заказы отсутствуют</h2>
                   </div>
                 </template>
               </div>
@@ -460,8 +460,8 @@ export default {
     orders() {
       return this.$store.state.account.orders
     },
-    configs() {
-      return this.$store.state.account.configs
+    constructors() {
+      return this.$store.state.account.constructors
     },
     apiPath() {
       return `${this.$store.state.apiPath}storage`
@@ -471,6 +471,7 @@ export default {
     this.setUser()
     this.fetchWishlist()
     this.fetchOrders()
+    this.fetchConstructors()
 
     if (this.$route.params.currentTab) {
       this.currentTab = this.$route.params.currentTab
@@ -595,6 +596,9 @@ export default {
     },
     async fetchOrders() {
       await this.$store.dispatch('account/fetchOrders')
+    },
+    async fetchConstructors() {
+      await this.$store.dispatch('account/fetchConstructors')
     },
     async logOut() {
       await this.$auth.logout()

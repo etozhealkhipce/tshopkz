@@ -19,7 +19,9 @@
 export default {
   head: {
     title: 'Успешная регистрация | Интернет—магазин t-shop.kz'
-  }
+  },
+  middleware: ['auth'],
+  auth: 'guest'
 }
 </script>
 
