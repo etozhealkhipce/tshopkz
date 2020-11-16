@@ -317,8 +317,6 @@ export default {
     }
   },
   mounted() {
-    // await this.$auth.fetchUser()
-
     if (this.isAuthenticated) this.fetchWishlist()
     this.$store.dispatch('cart/addCartProducts', localStorage.getItem('products'))
 

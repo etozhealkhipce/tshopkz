@@ -721,11 +721,7 @@ export default {
           if (this.order.payment_type === 'online') {
             window.open(response.data, '_self')
           } else if (this.order.payment_type === 'loan') {
-            if (response.data.attributes && response.data.attributes.error_code) {
-              throw new Error('Ошибка, попробуйте позднее!')
-            } else {
-              window.open(response.data.attributes.url, '_self')
-            }
+            window.open(response.data.attributes.url, '_self')
           } else {
             this.orderInfo = response.data
           }

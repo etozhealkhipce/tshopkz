@@ -104,7 +104,6 @@ export default {
     async loginSocial(provider) {
       const response = await this.$axios.get(`/login/${provider}`)
       window.open(response.data, '_self')
-      // console.log(response)
     },
     async login() {
       try {

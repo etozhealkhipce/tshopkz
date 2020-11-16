@@ -117,7 +117,7 @@ export default {
       this.docs = response.data
     },
     downloadDoc(doc) {
-      const fileLink = this.apiPath + JSON.parse(doc.file)[0].download_link
+      const fileLink = `${this.apiPath}storage/${JSON.parse(doc.file)[0].download_link}`
       const fileName = JSON.parse(doc.file)[0].original_name
 
       saveAs(fileLink, fileName)

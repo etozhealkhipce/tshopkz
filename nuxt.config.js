@@ -90,6 +90,17 @@ export default {
             propertyName: false
           }
         }
+      },
+      social: {
+        endpoints: {
+          login: {
+            propertyName: 'token'
+          },
+          logout: {
+            url: '/logout',
+            method: 'post'
+          }
+        }
       }
     },
     plugins: [{ src: '~/plugins/axios.js', ssr: false }]

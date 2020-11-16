@@ -9,7 +9,7 @@
                 <nuxt-link to="/" class="subtitle registration__back">
                   <span class="icon__back"></span>Выйти из конфигуратора
                 </nuxt-link>
-                <nuxt-link to="/" class="subtitle registration__back">Помощь</nuxt-link>
+                <!-- <nuxt-link to="/" class="subtitle registration__back">Помощь</nuxt-link> -->
               </div>
               <hr />
             </div>
@@ -30,7 +30,9 @@
                             :key="`radioS-${index}`"
                             v-model="currentCatId"
                             :value="category.id"
-                            :disabled="category.slug === 'motherboards' && !products[category.id]"
+                            :disabled="
+                              (category.slug !== 'motherboards' && !products[motherboardsId]) || compatibilityLoading
+                            "
                             name="radioS"
                             class="radio"
                             type="radio"
@@ -63,6 +65,7 @@
                                   :id="`radio-${index}`"
                                   :key="`radio-${index}`"
                                   v-model="products[category.id]"
+                                  :disabled="product.notCompatibile"
                                   :value="product"
                                   name="radio"
                                   class="radio"
@@ -79,7 +82,7 @@
                             </div>
                             <div class="column is-6">
                               <label :key="`label-${product.title}`" class="subtitle is-5" :for="`radio-${index}`">
-                                {{ product.title }}
+                                {{ product.notCompatibile }}
                               </label>
                               <p
                                 :key="`label-${product.description}`"
@@ -174,7 +177,23 @@
                             <button v-else class="button">Уже в корзине</button>
                           </div>
                           <div class="column is-full">
-                            <button class="button" @click="create()">Сохранить сборку</button>
+                            <template v-if="!isAuthenticated">
+                              <span class="subtitle is-6 has-text-centered">
+                                Для сохранения сборки сначала войдите в личный кабинет
+                              </span>
+                            </template>
+                            <template v-else>
+                              <button
+                                v-if="!constructorSave"
+                                :class="['button button_red', { 'is-loading': isLoading }]"
+                                @click="createConstructor()"
+                              >
+                                Сохранить сборку
+                              </button>
+                              <span v-else class="subtitle is-6 green has-text-centered">
+                                Сборка сохранена в личном кабинете
+                              </span>
+                            </template>
                           </div>
                         </div>
                       </div>
@@ -230,7 +249,7 @@
                         </li>
                       </ul>
 
-                      <div class="card-content__buttons">
+                      <div v-if="Object.keys(products).length" class="card-content__buttons">
                         <div class="card-content__buttons_header columns is-multiline">
                           <div class="column is-full">
                             <button class="button button_red" @click.prevent="addToCart()">
@@ -238,7 +257,23 @@
                             </button>
                           </div>
                           <div class="column is-full">
-                            <button class="button">Сохранить сборку</button>
+                            <template v-if="!isAuthenticated">
+                              <span class="subtitle is-6 has-text-centered">
+                                Для сохранения сборки сначала войдите в личный кабинет
+                              </span>
+                            </template>
+                            <template v-else>
+                              <button
+                                v-if="!constructorSave"
+                                :class="['button button_red', { 'is-loading': createLoading }]"
+                                @click="createConstructor()"
+                              >
+                                Сохранить сборку
+                              </button>
+                              <span v-else class="subtitle is-6 green has-text-centered">
+                                Сборка сохранена в личном кабинете
+                              </span>
+                            </template>
                           </div>
                         </div>
                       </div>
@@ -257,6 +292,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Preloader from '@/components/ui/Preloader'
 
 export default {
@@ -276,25 +312,37 @@ export default {
         productsInProduct: null
       },
 
-      categories: []
+      categories: [],
+
+      constructorSave: false,
+      compatibilityLoading: false,
+      createLoading: false
     }
   },
   computed: {
+    ...mapGetters(['isAuthenticated']),
     isLoading() {
       return this.$store.state.isLoading
     },
     apiPath() {
       return `${this.$store.state.apiPath}storage`
+    },
+    motherboardsId() {
+      const response = this.categories.filter((category) => category.slug === 'motherboards')
+      const id = response[0].id
+      return id
     }
   },
   watch: {
     productsWatchTrigger: {
       handler(val) {
-        const motherboardsId = this.categories.filter((category) => category.slug === 'motherboards')
+        this.constructorSave = false
 
-        if (motherboardsId[0] && motherboardsId[0].id) {
-          this.check(motherboardsId[0].id)
-        }
+        this.categories.forEach((category) => {
+          category.products.forEach((product) => {
+            this.check(product)
+          })
+        })
 
         this.totalPrice = 0
         for (const key in this.products) {
@@ -312,39 +360,48 @@ export default {
     this.fetchCategories()
   },
   methods: {
-    async check(motherboardsId) {
+    async check(product) {
       try {
-        for (const key in this.products) {
-          if (this.products[motherboardsId].id !== this.products[key].id) {
-            console.log(this.products[motherboardsId])
-            console.log(this.products[key])
-
-            const products = {
-              0: this.products[motherboardsId].id,
-              1: this.products[key].id
+        if (this.products[this.motherboardsId].id !== product) {
+          const products = {
+            products: {
+              0: this.products[this.motherboardsId].id,
+              1: product.id
             }
+          }
 
-            await this.$axios.post('constructor/check', products)
+          this.compatibilityLoading = true
+          const compatibility = await this.$axios.post('constructor/check', products)
+
+          if (compatibility.data === 'no' && product.pivot.category_id !== this.motherboardsId) {
+            product.notCompatibile = true
+          } else {
+            product.notCompatibile = false
           }
         }
       } catch (error) {
         console.log(error)
+      } finally {
+        this.compatibilityLoading = false
       }
     },
-
-    async create() {
+    async createConstructor() {
       try {
+        this.createLoading = true
         const products = {}
 
         for (const key in this.products) {
           products[key] = this.products[key].id
         }
         await this.$axios.post('constructor/create', products)
+
+        this.constructorSave = true
       } catch (error) {
         console.log(error)
+      } finally {
+        this.createLoading = false
       }
     },
-
     async fetchCategories() {
       this.$store.dispatch('editIsLoading', true)
 

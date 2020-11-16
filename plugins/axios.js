@@ -1,10 +1,5 @@
 export default function({ $axios, $auth, route }) {
-  $axios.onRequest((config) => {
-    if (route.query && route.query.token) {
-      $axios.setToken(route.query.token, 'Bearer')
-      $auth.setToken('local', 'Bearer ' + route.query.token)
-    }
-  })
+  $axios.onRequest(() => {})
 
   $axios.onError((error) => {
     console.log(error)
