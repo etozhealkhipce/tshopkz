@@ -375,12 +375,12 @@
                           <option v-for="city in cities" :key="city.code" :value="city">{{ city.name }}</option>
                         </select>
                       </div>
-                      <span
+                      <!-- <span
                         v-if="!$v.order.receiverCity.required && $v.order.receiverCity.$error"
                         class="red subtitle is-6 error__subtitle"
                       >
                         Обязательное поле
-                      </span>
+                      </span> -->
                     </div>
                     <div class="column is-6"></div>
                     <div class="column is-6"></div>
