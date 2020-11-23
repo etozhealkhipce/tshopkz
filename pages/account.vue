@@ -269,25 +269,13 @@
                         </p>
                         <hr />
                         <ul>
-                          <li class="card-content__part">
-                            <span class="card-content__part_name subtitle is-6">Видеокарта</span>
-                            <span class="subtitle is-5">NVIDIA GeForce RTX 2080 Ti</span>
-                          </li>
-                          <li class="card-content__part">
-                            <span class="card-content__part_name subtitle is-6">Процессор</span>
-                            <span class="subtitle is-5">Intel® Core™ i9-9900KF</span>
-                          </li>
-                          <li class="card-content__part">
-                            <span class="card-content__part_name subtitle is-6">Материнская плата</span>
-                            <span class="subtitle is-5">Intel® Z390 Chipset ATX</span>
-                          </li>
-                          <li class="card-content__part">
-                            <span class="card-content__part_name subtitle is-6">Оперативная память</span>
-                            <span class="subtitle is-5">4 x 16GB DDR4-3200 RGB</span>
-                          </li>
-                          <li class="card-content__part">
-                            <span class="card-content__part_name subtitle is-6">Жесткий диск</span>
-                            <span class="subtitle is-5">4TB HDD SATA 7200rpm</span>
+                          <li
+                            v-for="(attribute, index) in product.attribute_values"
+                            :key="`part-${index}`"
+                            class="card-content__part"
+                          >
+                            <span class="card-content__part_name subtitle is-6">{{ attribute.value }}</span>
+                            <!-- <span class="subtitle is-5">{{ part.description }}</span> -->
                           </li>
                         </ul>
                         <hr />
@@ -319,7 +307,49 @@
               <div v-if="currentTab === 'constructors'" class="columns is-multiline">
                 <template v-if="Object.keys(constructors).length !== 0">
                   <div v-for="(construstor, index) in constructors" :key="`order-${index}`" class="column is-6">
-                    {{ construstor }}
+                    <div class="card">
+                      <div class="card-content">
+                        <h3 class="card-content__main-title title is-3 is-spaced">Сборка № {{ construstor.id }}</h3>
+                        <!-- <p class="price subtitle is-4">
+                            {{
+                              Math.round(
+                                parseInt(product.price) - (parseInt(product.sale || 0) / 100) * parseInt(product.price)
+                              )
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                            }}
+                            тг.
+                          </p>
+                          <p v-if="product.sale" class="price subtitle is-4">
+                            Скидка:
+                            <span class="green">
+                              {{ product.sale }}
+                              %</span
+                            >
+                          </p> -->
+                        <ul>
+                          <li
+                            v-for="(product, index) in construstor.products"
+                            :key="`part-${index}`"
+                            class="card-content__part"
+                          >
+                            <span class="card-content__part_name subtitle is-6">{{ product.title }}</span>
+                          </li>
+                        </ul>
+                        <hr />
+
+                        <div class="card-content__buttons">
+                          <div class="card-content__buttons_header columns is-multiline">
+                            <div class="column is-full">
+                              <button class="button button_red" @click.prevent="addToCart()">В корзину</button>
+                            </div>
+                            <div class="column is-full">
+                              <button class="button card-content__buttons_create">Собрать компьютер</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </template>
                 <template v-else>
@@ -339,19 +369,19 @@
                         <ul>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Имя</span>
-                            <span class="subtitle is-5">{{ order.name }}</span>
+                            <span class="subtitle is-5">{{ order.name || 'Не указано' }}</span>
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Фамилия</span>
-                            <span class="subtitle is-5">{{ order.second_name }}</span>
+                            <span class="subtitle is-5">{{ order.second_name || 'Не указано' }}</span>
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Телефон</span>
-                            <span class="subtitle is-5"> {{ order.phone }}</span>
+                            <span class="subtitle is-5"> {{ order.phone || 'Не указано' }}</span>
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Статус заказа</span>
-                            <span class="subtitle is-5">{{ order.order_status }}</span>
+                            <span class="subtitle is-5">{{ order.order_status || 'Не указано' }}</span>
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Тип оплаты</span>
@@ -375,18 +405,18 @@
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Служба доставки</span>
-                            <span class="subtitle is-5">{{ order.delivery_company_name }}</span>
+                            <span class="subtitle is-5">{{ order.delivery_company_name || 'Не указано' }}</span>
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Стоимость доставки</span>
-                            <span class="subtitle is-5">{{ order.delivery_price }}</span>
+                            <span class="subtitle is-5">{{ order.delivery_price || 'Не указано' }}</span>
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Адрес</span>
-                            <span class="subtitle is-5">{{ order.city }}</span>
-                            <span class="subtitle is-5">{{ order.street }}</span>
-                            <span class="subtitle is-5">{{ order.house }}</span>
-                            <span class="subtitle is-5">{{ order.flat }}</span>
+                            <span class="subtitle is-5">{{ order.city || 'Не указано' }}</span>
+                            <span class="subtitle is-5">{{ order.street || 'Не указано' }}</span>
+                            <span class="subtitle is-5">{{ order.house || 'Не указано' }}</span>
+                            <span class="subtitle is-5">{{ order.flat || 'Не указано' }}</span>
                           </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Общая стоимость заказа</span>

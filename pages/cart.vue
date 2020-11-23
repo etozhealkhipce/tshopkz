@@ -375,12 +375,12 @@
                           <option v-for="city in cities" :key="city.code" :value="city">{{ city.name }}</option>
                         </select>
                       </div>
-                      <!-- <span
+                      <span
                         v-if="!$v.order.receiverCity.required && $v.order.receiverCity.$error"
                         class="red subtitle is-6 error__subtitle"
                       >
                         Обязательное поле
-                      </span> -->
+                      </span>
                     </div>
                     <div class="column is-6"></div>
                     <div class="column is-6"></div>
@@ -405,12 +405,29 @@
                           <option value="online">Онлайн-оплата</option>
                         </select>
                       </div>
-                      <span
+                      <!-- <span
                         v-if="!$v.order.payment_type.required && $v.order.payment_type.$error"
                         class="red subtitle is-6 error__subtitle"
                       >
                         Обязательное поле
-                      </span>
+                      </span> -->
+                    </div>
+                    <div v-if="order.payment_type === 'loan'" class="column is-6">
+                      <label for="deliveryCompany" class="label">Город кредитования</label>
+                      <br />
+                      <div class="custom-select">
+                        <select id="deliveryCompany" v-model="loanCity">
+                          <option v-for="city in cities" :key="city.homebankCode" :value="city.homebankCode">
+                            {{ city.name }}
+                          </option>
+                        </select>
+                      </div>
+                      <!-- <span
+                        v-if="!$v.loanCity.required && $v.loanCity.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Обязательное поле
+                      </span> -->
                     </div>
                   </div>
                 </div>
@@ -524,6 +541,7 @@ export default {
       delivery: true,
       deliveryCompany: '',
       comment: '',
+      loanCity: '',
 
       order: {
         client_type: '',
@@ -688,7 +706,7 @@ export default {
             newProducts.push(newProduct)
           })
 
-          const response = await this.$axios.post('/orders', {
+          const body = {
             client_type: this.order.client_type,
             second_name: this.order.second_name,
             name: this.order.name,
@@ -716,7 +734,12 @@ export default {
                 param: 1000
               }
             ]
-          })
+          }
+          if (this.order.payment_type === 'loan') {
+            body.sales_place = this.loanCity
+          }
+
+          const response = await this.$axios.post('/orders', body)
 
           if (this.order.payment_type === 'online') {
             window.open(response.data, '_self')
@@ -815,7 +838,13 @@ export default {
       payment_type: {
         required
       }
+      // receiverCity: {
+      //   required: requiredIf(() => this.order.delivery_type === 'delivery')
+      // }
     }
+    // loanCity: {
+    //   required: requiredIf(() => this.order.payment_type === 'loan')
+    // }
   }
 }
 </script>

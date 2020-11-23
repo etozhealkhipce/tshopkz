@@ -25,7 +25,9 @@
           </template>
 
           <div class="button-wrapper column is-full">
-            <button class="button button_red">Перейти в Instagram</button>
+            <a :href="`https://instagram.com/${username}`" target="_blank" class="button button_red">
+              Перейти в профиль
+            </a>
           </div>
         </div>
       </div>

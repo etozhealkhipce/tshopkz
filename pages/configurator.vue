@@ -393,7 +393,7 @@ export default {
         for (const key in this.products) {
           products[key] = this.products[key].id
         }
-        await this.$axios.post('constructor/create', products)
+        await this.$axios.post('constructor/create', { products })
 
         this.constructorSave = true
       } catch (error) {

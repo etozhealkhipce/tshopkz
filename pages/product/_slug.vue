@@ -5,7 +5,7 @@
         <div class="product">
           <template v-if="Object.keys(product).length !== 0">
             <div class="columns is-multiline is-variable is-4">
-              <div class="column is-6" @click="showImage">
+              <div class="column is-6" @click="showImage('mainImage')">
                 <figure class="image is-3by2">
                   <div
                     ref="mainImage"
@@ -33,7 +33,9 @@
               <div class="column is-6">
                 <div class="product__header">
                   <!-- <a class="subtitle is-6"> <span class="icon__sravnenie"></span>Сравнение </a> -->
-                  <a v-if="isAuthenticated" class="subtitle is-6"> <span class="icon__bookmate"></span>Избранное </a>
+                  <a v-if="isAuthenticated && product" class="subtitle is-6">
+                    <span class="icon__bookmate"></span>Избранное
+                  </a>
                 </div>
                 <h2 class="title is-3 is-uppercase is-spaced">{{ product.title }}</h2>
                 <p class="subtitle is-5">{{ product.description }}</p>
@@ -88,11 +90,45 @@
               </div>
             </div>
             <div class="columns is-multiline">
-              <template v-if="currentTab === 'photos'">
-                <div v-for="(image, index) in JSON.parse(product.images)" :key="`image-${index}`" class="column is-4">
-                  <figure class="image is-square">
-                    <img :src="`${apiPath}/${image}`" :alt="`product-${product.title}`" />
+              <template v-if="product.images && currentTab === 'photos'">
+                <div class="column is-4">
+                  <figure class="image is-square" @click="showImage('image')">
+                    <div
+                      ref="image"
+                      v-viewer="{
+                        inline: false,
+                        button: true,
+                        navbar: false,
+                        title: false,
+                        toolbar: false,
+                        tooltip: false,
+                        movable: false,
+                        zoomable: false,
+                        rotatable: false,
+                        scalable: false,
+                        transition: false,
+                        fullscreen: true,
+                        keyboard: true,
+                        url: 'data-source'
+                      }"
+                    >
+                      <template v-for="(image, index) in JSON.parse(product.images)">
+                        <img
+                          :key="`image-${index}`"
+                          :src="`${apiPath}/${image}`"
+                          :alt="`product-${product.title}`"
+                          :data-source="`${apiPath}/${image}`"
+                        />
+                      </template>
+                    </div>
                   </figure>
+                </div>
+              </template>
+              <template v-else>
+                <div class="container">
+                  <p class="title is-4">
+                    Фотографии отсутствуют
+                  </p>
                 </div>
               </template>
 
@@ -173,8 +209,8 @@ export default {
     }
   },
   methods: {
-    showImage() {
-      this.$refs.mainImage.$viewer.show()
+    showImage(ref) {
+      this.$refs[ref].$viewer.show()
     },
     updateProducts() {
       if (process.client) {

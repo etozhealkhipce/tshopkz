@@ -3,26 +3,10 @@ import Nanogram from 'nanogram.js'
 export const state = () => ({
   mainCategories: [
     {
-      title: 'Начальный уровень',
-      subtitle: 'от 120 000 ₸',
+      title: '',
+      subtitle: '',
       image: {
-        path: 'https://hyperpc.ru/images/product/content_category/main/epix-mini-banner.jpg',
-        alt: ''
-      }
-    },
-    {
-      title: 'Продвинутый уровень',
-      subtitle: 'от 200 000 ₸',
-      image: {
-        path: 'https://hyperpc.ru/images/product/content_category/main/gaming-banner-mini.jpg',
-        alt: ''
-      }
-    },
-    {
-      title: 'Профессиональный уровень',
-      subtitle: 'от 500 000 ₸',
-      image: {
-        path: 'https://hyperpc.ru/images/product/content_category/main/hyperpc-exclusive-mini-banner.jpg',
+        path: '',
         alt: ''
       }
     }
@@ -57,13 +41,14 @@ export const actions = {
 
       if (instagramLogin) {
         const response = await new Nanogram().getMediaByUsername(instagramLogin)
+
         const instagramPhotos = response.profile.edge_owner_to_timeline_media.edges
           .filter((element) => {
             return !element.node.is_video
           })
           .slice(0, 6)
 
-        const username = response.profile.username
+        const username = instagramLogin
 
         commit('SET_INSTAGRAM_USERNAME', username)
         commit('SET_ISTAGRAM_PHOTOS', instagramPhotos)
