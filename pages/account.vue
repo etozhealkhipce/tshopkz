@@ -36,10 +36,10 @@
                   </div>
                   <div class="field">
                     <p class="control has-icons-left has-icons-right">
-                      <label class="label" for="phone">Телефон</label>
+                      <label class="label" for="phone">Телефон (без + и без 8)</label>
                       <input
                         v-model.trim="$v.userInfo.phone.$model"
-                        placeholder="+7 (___) ___-__-__"
+                        placeholder="(___) ___-__-__"
                         name="phone"
                         class="custom-input"
                         type="text"
@@ -225,23 +225,23 @@
               <div v-if="currentTab === 'wishlist'" class="columns is-multiline">
                 <template v-if="Object.keys(wishlist).length !== 0">
                   <div v-for="(product, index) in wishlist" :key="`item-${index}`" class="column is-6">
-                    <div class="card">
-                      <div class="card-image">
-                        <figure class="image is-square">
-                          <p class="power title is-3">84</p>
-                          <img :src="`${apiPath}/${product.main_img}`" :alt="`product-${index}`" />
-                        </figure>
-                      </div>
-                      <div class="card-content">
-                        <div class="card-content__header">
-                          <!-- <a class="subtitle is-6"> <span class="icon__sravnenie"></span>Сравнение </a> -->
-                          <a class="subtitle is-6" @click.prevent="removeFromWishlist(product.id)">
-                            <span class="icon__close"></span>Убрать
-                          </a>
+                    <nuxt-link :to="`/product/${product.slug}`">
+                      <div class="card">
+                        <div class="card-image">
+                          <figure class="image is-square">
+                            <img :src="`${apiPath}/${product.main_img}`" :alt="`product-${index}`" />
+                          </figure>
                         </div>
-                        <hr />
-                        <h3 class="card-content__main-title title is-3 is-spaced">{{ product.title }}</h3>
-                        <!-- <p class="bank-price subtitle is-6">
+                        <div class="card-content">
+                          <div class="card-content__header">
+                            <!-- <a class="subtitle is-6"> <span class="icon__sravnenie"></span>Сравнение </a> -->
+                            <a class="subtitle is-6" @click.prevent="removeFromWishlist(product.id)">
+                              <span class="icon__close"></span>Убрать
+                            </a>
+                          </div>
+                          <hr />
+                          <h3 class="card-content__main-title title is-3 is-spaced">{{ product.title }}</h3>
+                          <!-- <p class="bank-price subtitle is-6">
                           Рассрочка:
                           {{
                             Math.floor(product.price * 0.3)
@@ -250,67 +250,7 @@
                           }}
                           тг.
                         </p> -->
-                        <p class="price subtitle is-4">
-                          {{
-                            Math.round(
-                              parseInt(product.price) - (parseInt(product.sale || 0) / 100) * parseInt(product.price)
-                            )
-                              .toString()
-                              .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                          }}
-                          тг.
-                        </p>
-                        <p v-if="product.sale" class="price subtitle is-4">
-                          Скидка:
-                          <span class="green">
-                            {{ product.sale }}
-                            %</span
-                          >
-                        </p>
-                        <hr />
-                        <ul>
-                          <li
-                            v-for="(attribute, index) in product.attribute_values"
-                            :key="`part-${index}`"
-                            class="card-content__part"
-                          >
-                            <span class="card-content__part_name subtitle is-6">{{ attribute.value }}</span>
-                            <!-- <span class="subtitle is-5">{{ part.description }}</span> -->
-                          </li>
-                        </ul>
-                        <hr />
-
-                        <div class="card-content__buttons">
-                          <div class="card-content__buttons_header columns is-multiline">
-                            <div class="column is-full">
-                              <button class="button button_red" @click.prevent="addToCart(product)">В корзину</button>
-                            </div>
-                            <div class="column is-full">
-                              <button class="button">Подробнее</button>
-                            </div>
-                            <div class="column is-full">
-                              <button class="button card-content__buttons_create">Собрать компьютер</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <div class="column is-full">
-                    <h2 class="subtitle is-4">Продукты не добавлены</h2>
-                  </div>
-                </template>
-              </div>
-
-              <div v-if="currentTab === 'constructors'" class="columns is-multiline">
-                <template v-if="Object.keys(constructors).length !== 0">
-                  <div v-for="(construstor, index) in constructors" :key="`order-${index}`" class="column is-6">
-                    <div class="card">
-                      <div class="card-content">
-                        <h3 class="card-content__main-title title is-3 is-spaced">Сборка № {{ construstor.id }}</h3>
-                        <!-- <p class="price subtitle is-4">
+                          <p class="price subtitle is-4">
                             {{
                               Math.round(
                                 parseInt(product.price) - (parseInt(product.sale || 0) / 100) * parseInt(product.price)
@@ -326,25 +266,86 @@
                               {{ product.sale }}
                               %</span
                             >
-                          </p> -->
+                          </p>
+                          <ul>
+                            <li
+                              v-for="(attributeValue, index) in product.attribute_values"
+                              :key="`part-${index}`"
+                              class="card-content__part"
+                            >
+                              <div class="card-content__part_attribute-icon">
+                                <img
+                                  class="card-content__part_icon"
+                                  :src="`${apiPath}/${attributeValue.attribute.icon}`"
+                                  alt=""
+                                />
+                                <span class="card-content__part_name subtitle is-6">
+                                  {{ attributeValue.attribute.title }}
+                                </span>
+                              </div>
+                              <span class="subtitle is-5">{{ attributeValue.value }}</span>
+                            </li>
+                            <hr />
+                          </ul>
+                          <div class="card-content__buttons">
+                            <div class="card-content__buttons_header columns is-multiline">
+                              <div class="column is-full">
+                                <button class="button card-content__buttons_create">Сконфигурировать</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </nuxt-link>
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="column is-full">
+                    <h2 class="subtitle is-4">Продукты не добавлены</h2>
+                  </div>
+                </template>
+              </div>
+
+              <div v-if="currentTab === 'constructors'" class="columns is-multiline">
+                <template v-if="Object.keys(constructors).length !== 0">
+                  <div v-for="(construstor, index) in constructors" :key="`order-${index}`" class="column is-6">
+                    <div class="card">
+                      <div class="card-content">
+                        <h3 class="card-content__main-title title is-3 is-spaced">Сборка № {{ construstor.id }}</h3>
                         <ul>
                           <li
                             v-for="(product, index) in construstor.products"
                             :key="`part-${index}`"
                             class="card-content__part"
                           >
-                            <span class="card-content__part_name subtitle is-6">{{ product.title }}</span>
+                            <div class="card-content__part_attribute-icon">
+                              <img
+                                v-if="product.icon"
+                                class="card-content__part_icon"
+                                :src="`${apiPath}/${product.icon}`"
+                                alt=""
+                              />
+                              <span class="card-content__part_name subtitle is-6">
+                                {{ product.title }}
+                              </span>
+                            </div>
+                            <span class="subtitle is-5">{{ product.description }}</span>
                           </li>
                         </ul>
                         <hr />
 
                         <div class="card-content__buttons">
                           <div class="card-content__buttons_header columns is-multiline">
-                            <div class="column is-full">
+                            <!-- <div class="column is-full">
                               <button class="button button_red" @click.prevent="addToCart()">В корзину</button>
-                            </div>
+                            </div> -->
                             <div class="column is-full">
-                              <button class="button card-content__buttons_create">Собрать компьютер</button>
+                              <nuxt-link
+                                class="button"
+                                :to="{ name: 'configurator', params: { products: construstor.products } }"
+                              >
+                                Редактировать сборку
+                              </nuxt-link>
                             </div>
                           </div>
                         </div>
@@ -367,6 +368,25 @@
                         <h3 class="card-content__main-title title is-3 is-spaced">Заказ № {{ order.id }}</h3>
                         <hr />
                         <ul>
+                          <li class="card-content__part">
+                            <span class="card-content__part_name subtitle is-6">Статус оплаты</span>
+                            <span v-if="order.payment_status === 'not_payed'" class="subtitle is-5 red">
+                              Не оплачен
+                            </span>
+                            <span v-else class="subtitle is-5 green">Оплачен</span>
+                          </li>
+                          <li class="card-content__part">
+                            <span class="card-content__part_name subtitle is-6">Вид оплаты</span>
+                            <span class="subtitle is-5">
+                              {{
+                                order.payment_type === 'loan'
+                                  ? 'Кредит'
+                                  : order.payment_type === 'cash'
+                                  ? 'Наличные'
+                                  : 'Онлайн'
+                              }}
+                            </span>
+                          </li>
                           <li class="card-content__part">
                             <span class="card-content__part_name subtitle is-6">Имя</span>
                             <span class="subtitle is-5">{{ order.name || 'Не указано' }}</span>
@@ -451,11 +471,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { required, email, minLength, helpers } from 'vuelidate/lib/validators'
+import { required, email, numeric, minLength, maxLength } from 'vuelidate/lib/validators'
 import loaders from '~/mixins/loaders'
-
-// eslint-disable-next-line no-useless-escape
-const phoneValidator = helpers.regex('phoneValidator', /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/)
 
 export default {
   mixins: [loaders],
@@ -633,6 +650,24 @@ export default {
     async logOut() {
       await this.$auth.logout()
     },
+    addToCart(item) {
+      const products = JSON.parse(localStorage.getItem('products')) || []
+
+      let copy = false
+
+      products.forEach((element) => {
+        if (element.id === item.id) {
+          copy = true
+        }
+      })
+
+      if (!copy) {
+        products.push(item)
+      }
+
+      localStorage.setItem('products', JSON.stringify(products))
+      this.$store.dispatch('cart/addCartProducts', localStorage.getItem('products'))
+    },
     urlencodedGenerate() {
       const urlencoded = new URLSearchParams()
       urlencoded.append('name', this.userInfo.name)
@@ -663,7 +698,8 @@ export default {
       },
       phone: {
         required,
-        phoneValidator
+        maxLength: maxLength(10),
+        numeric
       },
       city: {
         required
@@ -740,16 +776,26 @@ export default {
   }
 }
 
-.card {
-  .image {
-    position: relative;
+hr {
+  width: 100%;
+  background-color: #47484e;
+  height: 2px;
+  margin: 0;
+}
 
-    .power {
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      color: #47e220;
-      z-index: 1;
+.card {
+  &-content__part {
+    &_attribute-icon {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    &_icon {
+      width: 1rem;
+      display: inline-block;
+      margin-right: 0.5rem;
     }
   }
 }

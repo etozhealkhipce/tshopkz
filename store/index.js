@@ -5,92 +5,92 @@ export const state = () => ({
     {
       name: 'Алматы',
       code: '4756',
-      homebankCode: '050000'
+      postCode: '050000'
     },
     {
       name: 'Шымкент',
       code: '12787',
-      homebankCode: '160000'
+      postCode: '160000'
     },
     {
       name: 'Караганда',
       code: '7669',
-      homebankCode: '100000'
+      postCode: '100000'
     },
     {
       name: 'Тараз',
       code: '11518',
-      homebankCode: '080000'
+      postCode: '080000'
     },
     {
       name: 'Нур-Султан',
       code: '4961',
-      homebankCode: '010000'
+      postCode: '010000'
     },
     {
       name: 'Павлодар',
       code: '10020',
-      homebankCode: '140001'
+      postCode: '140001'
     },
     {
       name: 'Усть-Каменогорск',
       code: '11903',
-      homebankCode: '070000'
+      postCode: '070000'
     },
     {
       name: 'Семей',
       code: '15481',
-      homebankCode: '071400'
+      postCode: '071400'
     },
     {
       name: 'Кызылорда',
       code: '8402',
-      homebankCode: '120000'
+      postCode: '120000'
     },
     {
       name: 'Актобе',
       code: '4693',
-      homebankCode: '030000'
+      postCode: '030000'
     },
     {
       name: 'Актау',
       code: '13435',
-      homebankCode: '130000'
+      postCode: '130000'
     },
     {
       name: 'Костанай',
       code: '8199',
-      homebankCode: '110000'
+      postCode: '110000'
     },
     {
       name: 'Петропавловск',
       code: '10212',
-      homebankCode: '150000'
+      postCode: '150000'
     },
     {
       name: 'Уральск',
       code: '11883',
-      homebankCode: '090000'
+      postCode: '090000'
     },
     {
       name: 'Атырау',
       code: '4994',
-      homebankCode: '060000'
+      postCode: '060000'
     },
     {
       name: 'Кокшетау',
       code: '8064',
-      homebankCode: '020000'
+      postCode: '020000'
     },
     {
       name: 'Жесказган',
       code: '7144',
-      homebankCode: '100600'
+      postCode: '100600'
     },
     {
       name: 'Талдыкорган',
       code: '11490',
-      homebankCode: '040000'
+      postCode: '040000'
     }
   ]
 })

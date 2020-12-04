@@ -9,7 +9,7 @@
                 <nuxt-link to="/" class="subtitle registration__back">
                   <span class="icon__back"></span>Выйти из конфигуратора
                 </nuxt-link>
-                <!-- <nuxt-link to="/" class="subtitle registration__back">Помощь</nuxt-link> -->
+                <nuxt-link to="/account" class="subtitle registration__back">Перейти в личный кабинет</nuxt-link>
               </div>
               <hr />
             </div>
@@ -30,9 +30,7 @@
                             :key="`radioS-${index}`"
                             v-model="currentCatId"
                             :value="category.id"
-                            :disabled="
-                              (category.slug !== 'motherboards' && !products[motherboardsId]) || compatibilityLoading
-                            "
+                            :disabled="(category.slug !== 'cpus' && !products[cpusId]) || compatibilityLoading"
                             name="radioS"
                             class="radio"
                             type="radio"
@@ -70,19 +68,44 @@
                                   name="radio"
                                   class="radio"
                                   type="radio"
-                                  @change="productsWatchTrigger += 1"
+                                  @change="productChange(product)"
                                 />
                                 <span class="radiomark"></span>
                               </label>
                             </div>
                             <div class="column">
                               <figure class="image is-128x128">
-                                <img :src="`${apiPath}/${product.main_img}`" />
+                                <div
+                                  ref="image"
+                                  v-viewer="{
+                                    inline: false,
+                                    button: true,
+                                    navbar: false,
+                                    title: false,
+                                    toolbar: false,
+                                    tooltip: false,
+                                    movable: false,
+                                    zoomable: false,
+                                    rotatable: false,
+                                    scalable: false,
+                                    transition: false,
+                                    fullscreen: true,
+                                    keyboard: true,
+                                    url: 'data-source'
+                                  }"
+                                >
+                                  <img
+                                    :key="`image-${index}`"
+                                    :src="`${apiPath}/${product.main_img}`"
+                                    :alt="`product-${product.title}`"
+                                    :data-source="`${apiPath}/${product.main_img}`"
+                                  />
+                                </div>
                               </figure>
                             </div>
                             <div class="column is-6">
                               <label :key="`label-${product.title}`" class="subtitle is-5" :for="`radio-${index}`">
-                                {{ product.notCompatibile }}
+                                {{ product.title }}
                               </label>
                               <p
                                 :key="`label-${product.description}`"
@@ -102,7 +125,11 @@
                                     .toString()
                                     .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
                                 }}
-                                тенге
+                                тг.
+                              </p>
+                              <p class="subtitle is-6 table-price green">
+                                Cкидка {{ product.sale }}
+                                %
                               </p>
                             </div>
                           </div>
@@ -126,15 +153,6 @@
                     <div class="card-content">
                       <hr />
                       <h3 class="card-content__main-title title is-4 is-spaced">{{ paramsProduct.product.title }}</h3>
-                      <!-- <p class="bank-price subtitle is-6">
-                        Рассрочка:
-                        {{
-                          Math.floor(paramsProduct.product.price * 0.3)
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                        }}
-                        тг.
-                      </p> -->
                       <p class="price subtitle is-4">
                         Общая стоимость сборки:
                         {{
@@ -144,37 +162,31 @@
                         }}
                         тенге
                       </p>
-                      <!-- <p v-if="paramsProduct.product.sale" class="price subtitle is-4">
-                        Скидка:
-                        <span class="green">
-                          {{ paramsProduct.product.sale }}
-                          %
-                        </span>
-                      </p> -->
-
                       <ul>
                         <li
                           v-for="(productInProduct, index) in products"
                           :key="`productInProduct-${index}`"
                           class="card-content__part"
                         >
-                          <!-- <span class="card-content__part_name subtitle is-6">{{ productInProduct.id }}</span> -->
-                          <span class="subtitle is-5">{{ productInProduct.title }}</span>
+                          <div class="card-content__part_attribute-icon">
+                            <img
+                              v-if="productInProduct.icon"
+                              class="card-content__part_icon"
+                              :src="`${apiPath}/${productInProduct.icon}`"
+                              alt=""
+                            />
+                            <span class="card-content__part_name subtitle is-6">{{ productInProduct.title }}</span>
+                          </div>
+                          <span class="subtitle is-5">{{ productInProduct.description }}</span>
                           <hr />
                         </li>
                       </ul>
-
                       <div class="card-content__buttons">
                         <div class="card-content__buttons_header columns is-multiline">
                           <div class="column is-full">
-                            <button
-                              v-if="!paramsProduct.product.copy"
-                              class="button button_red"
-                              @click.prevent="addToCart()"
-                            >
+                            <button class="button button_red" @click.prevent="addToCart()">
                               В корзину
                             </button>
-                            <button v-else class="button">Уже в корзине</button>
                           </div>
                           <div class="column is-full">
                             <template v-if="!isAuthenticated">
@@ -200,26 +212,9 @@
                     </div>
                   </div>
                   <div v-else class="card">
-                    <div class="card-image">
-                      <!-- <figure class="image is-square">
-                        <img
-                          :src="`${apiPath}/${paramsProduct.product.main_img}`"
-                          :alt="`product-${paramsProduct.product.id}`"
-                        />
-                      </figure> -->
-                    </div>
                     <div class="card-content">
                       <hr />
                       <h3 class="card-content__main-title title is-4 is-spaced">Новая сборка</h3>
-                      <!-- <p class="bank-price subtitle is-6">
-                        Рассрочка:
-                        {{
-                          Math.floor(paramsProduct.product.price * 0.3)
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                        }}
-                        тг.
-                      </p> -->
                       <p class="price subtitle is-4">
                         Общая стоимость сборки:
                         {{
@@ -229,13 +224,6 @@
                         }}
                         тенге
                       </p>
-                      <!-- <p v-if="paramsProduct.product.sale" class="price subtitle is-4">
-                        Скидка:
-                        <span class="green">
-                          {{ paramsProduct.product.sale }}
-                          %
-                        </span>
-                      </p> -->
 
                       <ul>
                         <li
@@ -243,8 +231,16 @@
                           :key="`productInProduct-${index}`"
                           class="card-content__part"
                         >
-                          <!-- <span class="card-content__part_name subtitle is-6">{{ productInProduct.id }}</span> -->
-                          <span class="subtitle is-5">{{ productInProduct.title }}</span>
+                          <div class="card-content__part_attribute-icon">
+                            <img
+                              v-if="productInProduct.icon"
+                              class="card-content__part_icon"
+                              :src="`${apiPath}/${productInProduct.icon}`"
+                              alt=""
+                            />
+                            <span class="card-content__part_name subtitle is-6">{{ productInProduct.title }}</span>
+                          </div>
+                          <span class="subtitle is-5">{{ productInProduct.description }}</span>
                           <hr />
                         </li>
                       </ul>
@@ -327,8 +323,8 @@ export default {
     apiPath() {
       return `${this.$store.state.apiPath}storage`
     },
-    motherboardsId() {
-      const response = this.categories.filter((category) => category.slug === 'motherboards')
+    cpusId() {
+      const response = this.categories.filter((category) => category.slug === 'cpus')
       const id = response[0].id
       return id
     }
@@ -360,12 +356,19 @@ export default {
     this.fetchCategories()
   },
   methods: {
+    productChange(product) {
+      if (product.pivot.category_id === this.cpusId) {
+        this.products = {}
+        this.products[product.pivot.category_id] = product
+      }
+      this.productsWatchTrigger += 1
+    },
     async check(product) {
       try {
-        if (this.products[this.motherboardsId].id !== product) {
+        if (this.products[this.cpusId].id !== product) {
           const products = {
             products: {
-              0: this.products[this.motherboardsId].id,
+              0: this.products[this.cpusId].id,
               1: product.id
             }
           }
@@ -373,7 +376,7 @@ export default {
           this.compatibilityLoading = true
           const compatibility = await this.$axios.post('constructor/check', products)
 
-          if (compatibility.data === 'no' && product.pivot.category_id !== this.motherboardsId) {
+          if (compatibility.data === 'no' && product.pivot.category_id !== this.cpusId) {
             product.notCompatibile = true
           } else {
             product.notCompatibile = false
@@ -409,7 +412,7 @@ export default {
       this.categories = response.data
 
       this.categories.forEach((category) => {
-        if (category.slug === 'motherboards') {
+        if (category.slug === 'cpus') {
           this.currentCatId = category.id
         }
       })
@@ -419,6 +422,21 @@ export default {
 
         this.fetchProductInProducts(product.id)
         this.paramsProduct.product = Object.assign(product)
+      } else if (this.$route.params.products) {
+        const products = this.$route.params.products
+
+        products.forEach((paramsProduct) => {
+          this.categories.forEach((category, index) => {
+            category.products.forEach((catProduct) => {
+              if (paramsProduct.id === catProduct.id) {
+                this.products[category.id] = catProduct
+                this.productsWatchTrigger += 1
+              }
+            })
+          })
+        })
+
+        this.$store.dispatch('editIsLoading', false)
       } else {
         this.$store.dispatch('editIsLoading', false)
       }
@@ -476,6 +494,13 @@ export default {
 <style scoped lang="scss">
 .main {
   padding-top: 0;
+
+  hr {
+    width: 100%;
+    background-color: #47484e;
+    height: 2px;
+    margin: 0;
+  }
 
   label {
     cursor: pointer;
@@ -535,7 +560,20 @@ export default {
   margin-top: 1rem;
 }
 
-.table-price {
-  opacity: 0.5;
+.card {
+  &-content__part {
+    &_attribute-icon {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    &_icon {
+      width: 1rem;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+  }
 }
 </style>

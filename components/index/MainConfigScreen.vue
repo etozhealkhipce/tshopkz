@@ -21,8 +21,7 @@ export default {}
 
 <style lang="scss" scoped>
 .config {
-  background: url('https://hyperpc.ru/images/company/why-hyperpc/oclab_overclock/why-hyperpc-overclocking-banner.jpg')
-    center/cover no-repeat;
+  background: url('https://api.tshop.kz/storage/sliders/December2020/65eX1xiX68SWptdIIOBP.jpg') center/cover no-repeat;
   height: 37rem;
 
   &__content_wrapper {

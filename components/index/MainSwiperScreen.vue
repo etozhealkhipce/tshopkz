@@ -3,7 +3,7 @@
     <swiper-slide
       v-for="(slide, index) in sliders"
       :key="`slid-${index}`"
-      style="background: url('images/slide1.jpg') center/cover no-repeat"
+      :style="`background: url('${apiPath}/${slide.image}') center/cover no-repeat`"
     >
       <div class="container slide">
         <div class="columns slide__content">
@@ -54,7 +54,13 @@ export default {
   computed: {
     sliders() {
       return this.$store.state['main.page'].sliders
+    },
+    apiPath() {
+      return `${this.$store.state.apiPath}storage`
     }
+  },
+  mounted() {
+    console.log(this.sliders)
   }
 }
 </script>

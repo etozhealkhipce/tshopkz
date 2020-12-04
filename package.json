@@ -24,6 +24,7 @@
     "swiper": "^5.4.1",
     "v-viewer": "^1.5.1",
     "vue-awesome-swiper": "^4.1.1",
+    "vue-range-component": "^1.0.3",
     "vue-scrollto": "^2.18.1",
     "vuelidate": "^0.7.5"
   },

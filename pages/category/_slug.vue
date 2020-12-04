@@ -8,7 +8,6 @@
               <div class="columns is-multiline is-centered">
                 <div class="column is-8 is-centered">
                   <h2 class="title is-4 has-text-centered">Показать FPS в играх</h2>
-
                   <div class="columns is-multiline is-centered">
                     <div class="column is-6">
                       <label class="label" for="games">Выберите игру</label>
@@ -74,16 +73,7 @@
                         </template>
                       </div>
                       <hr />
-                      <h3 class="card-content__main-title title is-3 is-spaced">{{ product.title }}</h3>
-                      <!-- <p class="bank-price subtitle is-6">
-                        Рассрочка:
-                        {{
-                          Math.floor(product.price * 0.3)
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                        }}
-                        тг.
-                      </p> -->
+                      <h3 class="card-content__main-title title is-3">{{ product.title }}</h3>
                       <p class="price subtitle is-4">
                         Стоимость:
                         {{
@@ -95,6 +85,22 @@
                         }}
                         тг.
                       </p>
+                      <p v-if="product && product.fps_values" class="bank-price subtitle is-6">
+                        <template v-for="(fps, index) in product.fps_values">
+                          <span :key="`fpsText-${index}`" class="fps">Средний FPS: {{ fps.value }}</span>
+                          <vue-range-slider
+                            :key="`fps-${index}`"
+                            ref="slider"
+                            :value="fps.value"
+                            disabled
+                            :tooltip="false"
+                            :max="700"
+                            :bg-style="range.bgStyle"
+                            :process-style="range.proccessStyle"
+                            :disabled-style="range.disabledStyle"
+                          />
+                        </template>
+                      </p>
                       <p v-if="product.sale" class="price subtitle is-4">
                         Скидка:
                         <span class="green">
@@ -102,23 +108,27 @@
                           %</span
                         >
                       </p>
-                      <p v-if="product && product.fps_values" class="price subtitle is-4">
-                        FPS:
-                        <span v-for="(fps, index) in product.fps_values" :key="`fps-${index}`" class="green">
-                          {{ fps.value }}
-                        </span>
-                      </p>
 
                       <template v-if="product && product.attribute_values && product.attribute_values.length">
                         <hr />
                         <ul>
                           <li
-                            v-for="(attribute, index) in product.attribute_values"
+                            v-for="(attributeValue, index) in product.attribute_values"
                             :key="`part-${index}`"
                             class="card-content__part"
                           >
-                            <span class="card-content__part_name subtitle is-6">{{ attribute.value }}</span>
-                            <!-- <span class="subtitle is-5">{{ part.description }}</span> -->
+                            <div class="card-content__part_attribute-icon">
+                              <img
+                                v-if="attributeValue.attribute.icon"
+                                class="card-content__part_icon"
+                                :src="`${apiPath}/${attributeValue.attribute.icon}`"
+                                alt=""
+                              />
+                              <span class="card-content__part_name subtitle is-6">
+                                {{ attributeValue.attribute.title }}
+                              </span>
+                            </div>
+                            <span class="subtitle is-5">{{ attributeValue.value }}</span>
                           </li>
                         </ul>
                         <hr />
@@ -147,7 +157,7 @@
                           </div>
                           <div class="column is-full">
                             <nuxt-link class="button" :to="{ name: 'configurator', params: { product: product } }">
-                              Собрать компьютер
+                              Сконфигурировать
                             </nuxt-link>
                           </div>
                         </div>
@@ -184,6 +194,13 @@ export default {
   },
   data() {
     return {
+      value: 1,
+      range: {
+        proccessStyle: { opacity: '0' },
+        bgStyle: { background: 'linear-gradient(90deg, #FF0B0B 0%, #F8F825 50.2%, #28E618 100%)' },
+        disabledStyle: { background: 'linear-gradient(90deg, #FF0B0B 0%, #F8F825 50.2%, #28E618 100%)', opacity: '1' }
+      },
+
       newProducts: [],
 
       games: [],
@@ -366,6 +383,40 @@ export default {
   .button {
     font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
       'Droid Sans', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  }
+
+  .fps {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .card {
+    .image {
+      position: relative;
+
+      .power {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        color: #47e220;
+        z-index: 1;
+      }
+    }
+
+    &-content__part {
+      &_attribute-icon {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      &_icon {
+        width: 1rem;
+        display: inline-block;
+        margin-right: 0.5rem;
+      }
+    }
   }
 }
 </style>

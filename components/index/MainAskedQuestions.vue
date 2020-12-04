@@ -68,7 +68,6 @@ export default {
       return this.$store.state['main.page'].faq
     }
   },
-  created() {},
   methods: {
     accordionVisible(index) {
       if (this.accordionCurrentIndex === index) {

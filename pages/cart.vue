@@ -135,7 +135,14 @@
                         </div>
                       </div>
                       <p v-if="couponStatus.name" class="green subtitle is-5">
-                        Скидка {{ couponStatus.sale }}% применена
+                        Скидка
+                        {{
+                          couponStatus.sale
+                            .toFixed()
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                        }}
+                        тенге применена
                       </p>
                       <p v-else-if="couponFailed" class="red subtitle is-5">
                         Промо-код не найден
@@ -161,7 +168,15 @@
                         </div>
                         <div v-if="couponSale" class="column">
                           <p class="total__subtitle subtitle is-6">Скидка промокода:</p>
-                          <p class="title is-5 green">{{ couponSale }} %</p>
+                          <p class="title is-5 green">
+                            {{
+                              couponSale
+                                .toFixed()
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                            }}
+                            тенге
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -222,7 +237,7 @@
                       <label for="second_name" class="label">Фамилия</label>
                       <input
                         id="second_name"
-                        v-model="order.second_name"
+                        v-model="$v.order.second_name.$model"
                         class="custom-input"
                         type="text"
                         name="second_name"
@@ -236,7 +251,7 @@
                     </div>
                     <div class="column is-6">
                       <label for="name" class="label">Имя</label>
-                      <input id="name" v-model="order.name" class="custom-input" type="text" name="name" />
+                      <input id="name" v-model="$v.order.name.$model" class="custom-input" type="text" name="name" />
                       <span
                         v-if="!$v.order.name.required && $v.order.name.$error"
                         class="red subtitle is-6 error__subtitle"
@@ -248,7 +263,7 @@
                       <label for="middle_name" class="label">Отчество</label>
                       <input
                         id="middle_name"
-                        v-model="order.middle_name"
+                        v-model="$v.order.middle_name.$model"
                         class="custom-input"
                         type="text"
                         name="middle_name"
@@ -262,18 +277,37 @@
                     </div>
                     <div class="column is-6"></div>
                     <div class="column is-6">
-                      <label for="phone" class="label">Номер телефона</label>
-                      <input id="phone" v-model="order.phone" class="custom-input" type="text" name="phone" />
+                      <label for="phone" class="label">Телефон (без + и без 8)</label>
+                      <input
+                        id="phone"
+                        v-model="$v.order.phone.$model"
+                        placeholder="(___) ___-__-__"
+                        class="custom-input"
+                        type="text"
+                        name="phone"
+                      />
                       <span
                         v-if="!$v.order.phone.required && $v.order.phone.$error"
                         class="red subtitle is-6 error__subtitle"
                       >
                         Обязательное поле
                       </span>
+                      <span
+                        v-if="!$v.order.phone.maxLength && $v.order.phone.$error"
+                        class="red subtitle is-6 error__subtitle"
+                      >
+                        Макс. длина 10 символов
+                      </span>
                     </div>
                     <div class="column is-6">
                       <label for="email" class="label">E-mail</label>
-                      <input id="email" v-model="order.email" class="custom-input" type="email" name="email" />
+                      <input
+                        id="email"
+                        v-model="$v.order.email.$model"
+                        class="custom-input"
+                        type="email"
+                        name="email"
+                      />
                       <span
                         v-if="!$v.order.email.required && $v.order.email.$error"
                         class="red subtitle is-6 error__subtitle"
@@ -302,7 +336,13 @@
                     </div>
                     <div class="column is-6">
                       <label for="street" class="label">Улица</label>
-                      <input id="street" v-model="order.street" class="custom-input" type="text" name="street" />
+                      <input
+                        id="street"
+                        v-model="$v.order.street.$model"
+                        class="custom-input"
+                        type="text"
+                        name="street"
+                      />
                       <span
                         v-if="!$v.order.street.required && $v.order.street.$error"
                         class="red subtitle is-6 error__subtitle"
@@ -312,7 +352,7 @@
                     </div>
                     <div class="column is-6">
                       <label for="house" class="label">Дом</label>
-                      <input id="house" v-model="order.house" class="custom-input" type="text" name="house" />
+                      <input id="house" v-model="$v.order.house.$model" class="custom-input" type="text" name="house" />
                       <span
                         v-if="!$v.order.house.required && $v.order.house.$error"
                         class="red subtitle is-6 error__subtitle"
@@ -417,7 +457,7 @@
                       <br />
                       <div class="custom-select">
                         <select id="deliveryCompany" v-model="loanCity">
-                          <option v-for="city in cities" :key="city.homebankCode" :value="city.homebankCode">
+                          <option v-for="city in cities" :key="city.postCode" :value="city.postCode">
                             {{ city.name }}
                           </option>
                         </select>
@@ -444,20 +484,16 @@
                       <div class="card__block">
                         <div v-for="(product, index) in products" :key="`item-${index}`">
                           <h3 class="card-content__main-title title is-4 is-spaced">{{ product.title }}</h3>
-                          <!-- <p class="bank-price subtitle is-6">
-                            Рассрочка:
-                            {{
-                              Math.floor(product.price * product.qty * 0.3)
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                            }}
-                            тенге
-                          </p> -->
                           <h3 class="title is-5">
                             Стоимость:
                             {{ (product.price * product.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }}
                             тенге
                           </h3>
+                          <p class="title is-5">
+                            Стоимость доставки:
+                            {{ deliveryPrice }}
+                            тенге
+                          </p>
                           <hr />
                         </div>
                       </div>
@@ -518,7 +554,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { required, email } from 'vuelidate/lib/validators'
+import { required, email, numeric, maxLength } from 'vuelidate/lib/validators'
 import loaders from '~/mixins/loaders'
 
 export default {
@@ -542,6 +578,9 @@ export default {
       deliveryCompany: '',
       comment: '',
       loanCity: '',
+      deliveryPrice: '0',
+      senderCityPostCode: '010003',
+      receiverCityPostCode: '',
 
       order: {
         client_type: '',
@@ -628,6 +667,7 @@ export default {
     setReceiverCity(currentReceiverCity) {
       this.order.receiverCity = currentReceiverCity.name
       this.order.receiverCityId = currentReceiverCity.code
+      this.receiverCityPostCode = currentReceiverCity.postCode
     },
     async checkPromo() {
       try {
@@ -637,7 +677,7 @@ export default {
         this.couponStatus = response.data
         this.couponSale = response.data.sale
         this.getTotalPrice()
-        this.totalPrice = this.totalPrice - (this.totalPrice / 100) * response.data.sale
+        this.totalPrice = this.totalPrice - response.data.sale
         this.$store.dispatch('editIsLoading', false)
       } catch {
         this.getTotalPrice()
@@ -821,7 +861,9 @@ export default {
         email
       },
       phone: {
-        required
+        required,
+        maxLength: maxLength(10),
+        numeric
       },
       city: {
         required
@@ -851,6 +893,13 @@ export default {
 
 <style lang="scss" scoped>
 .catalog {
+  hr {
+    width: 100%;
+    background-color: #47484e;
+    height: 2px;
+    margin: 0;
+  }
+
   .cart-product {
     &__subtitle_red {
       color: $red;

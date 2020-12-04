@@ -339,22 +339,13 @@ export default {
           formData.append('products', this.order.products)
           await this.$axios.post('/tradein', formData)
 
-          this.currentCategory = ''
-          this.currentProducts = {}
-          this.accordionCurrentIndex = null
-          this.order.images = []
-          this.order.name = ''
-          this.order.email = ''
-          this.order.phone = ''
-          this.order.comment = ''
-          this.order.products = ''
-
           this.orderInfo = true
         }
 
         this.editIsLoading(false)
       } catch (error) {
         console.log(error)
+      } finally {
         this.currentCategory = ''
         this.currentProducts = {}
         this.accordionCurrentIndex = null
@@ -364,6 +355,7 @@ export default {
         this.order.phone = ''
         this.order.comment = ''
         this.order.products = ''
+        this.$v.$reset()
       }
     }
   },

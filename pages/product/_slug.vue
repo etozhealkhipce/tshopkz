@@ -78,7 +78,9 @@
                     ></div>
                   </div>
                   <div class="column is-6">
-                    <button class="button">Собрать эту модель</button>
+                    <nuxt-link class="button" :to="{ name: 'configurator', params: { product: product } }">
+                      Сконфигурировать
+                    </nuxt-link>
                   </div>
                 </div>
               </div>
@@ -143,8 +145,9 @@
                 <div class="column is-full">
                   <table class="table is-hoverable is-fullwidth">
                     <tbody>
-                      <tr v-for="(attribute, index) in product.attribute_values" :key="`part-${index}`">
-                        <th>{{ attribute.value }}</th>
+                      <tr v-for="(attributeValue, index) in product.attribute_values" :key="`part-${index}`">
+                        <th>{{ attributeValue.attribute.title }}</th>
+                        <th>{{ attributeValue.value }}</th>
                       </tr>
                     </tbody>
                   </table>

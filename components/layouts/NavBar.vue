@@ -30,7 +30,6 @@
               <li class="list__item">
                 <nuxt-link to="/wholesale">Для оптовых продаж</nuxt-link>
               </li>
-              <li class="list__item" @click="goToAnchor('#faq')">FAQ</li>
               <li class="list__item">
                 <nuxt-link to="/tradein">TRADE-IN</nuxt-link>
               </li>
@@ -362,17 +361,6 @@ export default {
         await this.$store.dispatch('account/fetchWishlist')
       } catch (error) {
         console.log(error)
-      }
-    },
-    goToAnchor(anchor) {
-      this.showNavbar()
-      if (this.$route.path !== '/') {
-        this.$router.push({ name: 'index' })
-        setTimeout(() => {
-          this.$scrollTo(anchor)
-        }, 100)
-      } else {
-        this.$scrollTo(anchor)
       }
     },
     handleScroll() {

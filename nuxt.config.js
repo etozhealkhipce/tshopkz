@@ -33,7 +33,7 @@ export default {
     { src: '~/static/fonts/stylesheet.css', lang: 'css' },
     { src: '~/static/icons/style.css', lang: 'css' }
   ],
-  plugins: [{ src: '~/plugins/vuelidate' }, { src: '~/plugins/viewer' }],
+  plugins: [{ src: '~/plugins/vuelidate' }, { src: '~/plugins/viewer' }, { src: '~/plugins/range', ssr: false }],
   buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/style-resources', '@nuxtjs/dotenv'],
   styleResources: {
     scss: ['~/assets/style/_mixins.scss', '~/assets/style/_variables.scss']
