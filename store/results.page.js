@@ -15,7 +15,6 @@ export const actions = {
     })
 
     commit('ADD_RESULTS', response.data)
-    console.log(response)
   }
 }
 

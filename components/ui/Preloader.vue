@@ -1,18 +1,24 @@
 <template>
-  <div class="preloader">
+  <div class="preloader" :class="[full ? 'preloader__height_full' : 'preloader__height_half']">
     <div class="preloader__animation"></div>
     <p class="subtitle is-5 has-text-centered">Загрузка...</p>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  props: {
+    full: {
+      type: Boolean,
+      default: false
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
 .preloader {
   width: 100%;
-  margin: 10rem 0 10rem 0;
   @include column-full-center;
 
   &__animation {
@@ -20,6 +26,16 @@ export default {}
     background: #e22028;
     height: 2px;
     animation: example 1s infinite;
+  }
+
+  &__height {
+    &_full {
+      height: 100vh;
+    }
+
+    &_half {
+      margin: 10rem 0 10rem 0;
+    }
   }
 }
 

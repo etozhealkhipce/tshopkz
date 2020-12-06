@@ -38,7 +38,11 @@
                           <article class="tile is-child cart-product__buttons-wrapper">
                             <div class="cart-product__buttons">
                               <!-- <a class="subtitle is-6"> <span class="icon__sravnenie"></span>Сравнение </a> -->
-                              <a class="subtitle is-6" @click.prevent="addToWishlist(product.id)">
+                              <a
+                                v-if="isAuthenticated"
+                                class="subtitle is-6"
+                                @click.prevent="addToWishlist(product.id)"
+                              >
                                 <span class="icon__bookmate"></span>Избранное
                               </a>
                             </div>
@@ -415,12 +419,12 @@
                           <option v-for="city in cities" :key="city.code" :value="city">{{ city.name }}</option>
                         </select>
                       </div>
-                      <!-- <span
+                      <span
                         v-if="!$v.order.receiverCity.required && $v.order.receiverCity.$error"
                         class="red subtitle is-6 error__subtitle"
                       >
                         Обязательное поле
-                      </span> -->
+                      </span>
                     </div>
                     <div class="column is-6"></div>
                     <div class="column is-6"></div>
@@ -445,12 +449,12 @@
                           <option value="online">Онлайн-оплата</option>
                         </select>
                       </div>
-                      <!-- <span
+                      <span
                         v-if="!$v.order.payment_type.required && $v.order.payment_type.$error"
                         class="red subtitle is-6 error__subtitle"
                       >
                         Обязательное поле
-                      </span> -->
+                      </span>
                     </div>
                     <div v-if="order.payment_type === 'loan'" class="column is-6">
                       <label for="deliveryCompany" class="label">Город кредитования</label>
@@ -462,12 +466,12 @@
                           </option>
                         </select>
                       </div>
-                      <!-- <span
+                      <span
                         v-if="!$v.loanCity.required && $v.loanCity.$error"
                         class="red subtitle is-6 error__subtitle"
                       >
                         Обязательное поле
-                      </span> -->
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -489,11 +493,6 @@
                             {{ (product.price * product.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }}
                             тенге
                           </h3>
-                          <p class="title is-5">
-                            Стоимость доставки:
-                            {{ deliveryPrice }}
-                            тенге
-                          </p>
                           <hr />
                         </div>
                       </div>
@@ -507,6 +506,11 @@
                               .toString()
                               .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
                           }}
+                          тенге
+                        </p>
+                        <p class="title is-5">
+                          Стоимость доставки:
+                          {{ deliveryPrice }}
                           тенге
                         </p>
                       </div>
@@ -554,7 +558,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { required, email, numeric, maxLength } from 'vuelidate/lib/validators'
+import { required, email, numeric, maxLength, requiredIf } from 'vuelidate/lib/validators'
 import loaders from '~/mixins/loaders'
 
 export default {
@@ -607,12 +611,6 @@ export default {
             id: 1
           }
         ]
-        // services: [
-        //   {
-        //     id: 2,
-        //     param: 1000
-        //   }
-        // ]
       },
       currentReceiverCity: null,
 
@@ -879,27 +877,24 @@ export default {
       },
       payment_type: {
         required
+      },
+      receiverCity: {
+        required: requiredIf(function() {
+          return this.order.delivery_type === 'delivery'
+        })
       }
-      // receiverCity: {
-      //   required: requiredIf(() => this.order.delivery_type === 'delivery')
-      // }
+    },
+    loanCity: {
+      required: requiredIf(function() {
+        return this.order.payment_type === 'loan'
+      })
     }
-    // loanCity: {
-    //   required: requiredIf(() => this.order.payment_type === 'loan')
-    // }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .catalog {
-  hr {
-    width: 100%;
-    background-color: #47484e;
-    height: 2px;
-    margin: 0;
-  }
-
   .cart-product {
     &__subtitle_red {
       color: $red;

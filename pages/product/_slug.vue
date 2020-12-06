@@ -38,11 +38,10 @@
                   </a>
                 </div>
                 <h2 class="title is-3 is-uppercase is-spaced">{{ product.title }}</h2>
-                <p class="subtitle is-5">{{ product.description }}</p>
+                <div v-html="product.description"></div>
                 <div class="columns is-multiline is-variable is-2">
                   <div class="column is-full">
-                    <!-- <p class="subtitle is-6">Рассрочка 13.000 ₸/мес.</p>
-                    <h2 v-if="product.price" class="title is-4">
+                    <p class="price subtitle is-4">
                       Стоимость:
                       {{
                         Math.round(
@@ -52,7 +51,7 @@
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
                       }}
                       тг.
-                    </h2> -->
+                    </p>
                     <p v-if="product.sale" class="price subtitle is-4">
                       Скидка:
                       <span class="green">
@@ -92,8 +91,8 @@
               </div>
             </div>
             <div class="columns is-multiline">
-              <template v-if="product.images && currentTab === 'photos'">
-                <div class="column is-4">
+              <template v-if="currentTab === 'photos'">
+                <div v-if="product.images" class="column is-4">
                   <figure class="image is-square" @click="showImage('image')">
                     <div
                       ref="image"
@@ -125,9 +124,7 @@
                     </div>
                   </figure>
                 </div>
-              </template>
-              <template v-else>
-                <div class="container">
+                <div v-else class="container">
                   <p class="title is-4">
                     Фотографии отсутствуют
                   </p>
@@ -146,8 +143,8 @@
                   <table class="table is-hoverable is-fullwidth">
                     <tbody>
                       <tr v-for="(attributeValue, index) in product.attribute_values" :key="`part-${index}`">
-                        <th>{{ attributeValue.attribute.title }}</th>
-                        <th>{{ attributeValue.value }}</th>
+                        <td>{{ attributeValue.attribute.title }}</td>
+                        <td>{{ attributeValue.value }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -305,7 +302,7 @@ export default {
   }
 
   .table {
-    border: 1px solid #330709;
+    border: 1px solid $red;
 
     td {
       &:hover {

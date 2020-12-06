@@ -6,8 +6,8 @@
           <img class="logo" src="../../static/logo.svg" alt />
         </div>
 
-        <template>
-          <div v-for="(category, index) in categories" :key="`category-${index}`" class="column is-2">
+        <template v-for="(category, index) in categories">
+          <div v-if="category.constructor_status === 'no'" :key="`category-${index}`" class="column is-2">
             <h3 class="title is-5">{{ category.title }}</h3>
             <ul class="list">
               <nuxt-link

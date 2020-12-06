@@ -18,7 +18,14 @@
               <div class="column is-6 wholesale__content">
                 <h1 class="title is-spaced">{{ wholesale.title }}</h1>
                 <p class="subtitle">{{ wholesale.description }}</p>
-                <a class="subtitle red" @click="downloadDoc(wholesale.file)">Скачать прайс-лист</a>
+                <a
+                  v-for="(file, index) in files"
+                  :key="`file-${index}`"
+                  class="subtitle red"
+                  @click="downloadDoc(file)"
+                >
+                  Скачать {{ file.original_name }}
+                </a>
               </div>
               <div class="column is-full wholesale__body" v-html="wholesale.body"></div>
             </div>
@@ -38,12 +45,13 @@ export default {
   components: {
     Preloader
   },
-  fetch() {
-    this.fetchwholesale()
+  async fetch() {
+    await this.fetchwholesale()
   },
   data() {
     return {
-      wholesale: null
+      wholesale: null,
+      files: null
     }
   },
   computed: {
@@ -56,13 +64,14 @@ export default {
       try {
         const response = await this.$axios.get('/wholesale')
         this.wholesale = response.data
+        this.files = JSON.parse(response.data.file)
       } catch (error) {
         console.log(error)
       }
     },
-    downloadDoc(doc) {
-      const fileLink = `${this.apiPath}/${JSON.parse(doc.file)[0].download_link}`
-      const fileName = JSON.parse(doc.file)[0].original_name
+    downloadDoc(file) {
+      const fileLink = `${this.apiPath}/${file.download_link}`
+      const fileName = file.original_name
 
       saveAs(fileLink, fileName)
     }

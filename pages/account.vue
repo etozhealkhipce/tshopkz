@@ -329,7 +329,7 @@
                                 {{ product.title }}
                               </span>
                             </div>
-                            <span class="subtitle is-5">{{ product.description }}</span>
+                            <div v-html="product.description"></div>
                           </li>
                         </ul>
                         <hr />
@@ -774,13 +774,6 @@ export default {
       }
     }
   }
-}
-
-hr {
-  width: 100%;
-  background-color: #47484e;
-  height: 2px;
-  margin: 0;
 }
 
 .card {

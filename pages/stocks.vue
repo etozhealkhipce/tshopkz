@@ -172,8 +172,8 @@ export default {
   components: {
     Preloader
   },
-  fetch() {
-    this.fetchStocks()
+  async fetch() {
+    await this.fetchStocks()
   },
   data() {
     return {
@@ -220,13 +220,6 @@ export default {
 <style scoped lang="scss">
 .empty {
   padding: 5rem 0 5rem 0;
-}
-
-hr {
-  width: 100%;
-  background-color: #47484e;
-  height: 2px;
-  margin: 0;
 }
 
 .accordion {

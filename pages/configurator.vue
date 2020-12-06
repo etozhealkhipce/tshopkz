@@ -104,16 +104,12 @@
                               </figure>
                             </div>
                             <div class="column is-6">
-                              <label :key="`label-${product.title}`" class="subtitle is-5" :for="`radio-${index}`">
-                                {{ product.title }}
-                              </label>
-                              <p
-                                :key="`label-${product.description}`"
-                                class="subtitle is-6 table-desc"
-                                :for="`radio-${index}`"
-                              >
-                                {{ product.description }}
-                              </p>
+                              <nuxt-link :to="`product/${product.slug}`">
+                                <label :key="`label-${product.title}`" class="subtitle is-5" :for="`radio-${index}`">
+                                  {{ product.title }}
+                                </label>
+                                <div v-html="product.description"></div>
+                              </nuxt-link>
                             </div>
                             <div class="column">
                               <p class="subtitle is-6 table-price">
@@ -127,7 +123,7 @@
                                 }}
                                 тг.
                               </p>
-                              <p class="subtitle is-6 table-price green">
+                              <p v-if="product.sale" class="subtitle is-6 table-price green">
                                 Cкидка {{ product.sale }}
                                 %
                               </p>
@@ -177,7 +173,7 @@
                             />
                             <span class="card-content__part_name subtitle is-6">{{ productInProduct.title }}</span>
                           </div>
-                          <span class="subtitle is-5">{{ productInProduct.description }}</span>
+                          <div v-html="productInProduct.description"></div>
                           <hr />
                         </li>
                       </ul>
@@ -240,7 +236,7 @@
                             />
                             <span class="card-content__part_name subtitle is-6">{{ productInProduct.title }}</span>
                           </div>
-                          <span class="subtitle is-5">{{ productInProduct.description }}</span>
+                          <div v-html="productInProduct.description"></div>
                           <hr />
                         </li>
                       </ul>
@@ -280,7 +276,7 @@
             </div>
           </template>
 
-          <Preloader v-else />
+          <Preloader v-else full />
         </div>
       </div>
     </section>
@@ -445,7 +441,6 @@ export default {
       const response = await this.$axios.get(`constructor/product/${id}`)
       this.paramsProduct.productsInProduct = response.data
 
-      // todo
       this.paramsProduct.productsInProduct.forEach((paramsProduct) => {
         this.categories.forEach((category, index) => {
           category.products.forEach((catProduct) => {
@@ -495,13 +490,6 @@ export default {
 .main {
   padding-top: 0;
 
-  hr {
-    width: 100%;
-    background-color: #47484e;
-    height: 2px;
-    margin: 0;
-  }
-
   label {
     cursor: pointer;
   }
@@ -526,53 +514,50 @@ export default {
     &__header {
       @include horizontal-between;
     }
-  }
 
-  .details {
-    &__header {
-      border: 1px solid $red;
-      background: $red;
-      color: #ffffff;
-      padding: 0.5rem 1rem;
-      transition: 0.3s;
-      cursor: pointer;
+    .category {
+      margin-bottom: 3rem;
+      margin-top: 1rem;
 
-      &:hover {
-        background: $red;
+      &_s {
+        margin-top: 1rem;
       }
     }
 
-    &__body {
-      padding: 1rem 0;
-    }
-  }
+    .details {
+      &__header {
+        border: 1px solid $red;
+        background: $red;
+        color: #ffffff;
+        padding: 0.5rem 1rem;
+        transition: 0.3s;
+        cursor: pointer;
 
-  .category {
-    margin-bottom: 3rem;
+        &:hover {
+          background: $red;
+        }
+      }
 
-    &_s {
-      margin-top: 1rem;
-    }
-  }
-}
-
-.table-desc {
-  margin-top: 1rem;
-}
-
-.card {
-  &-content__part {
-    &_attribute-icon {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      margin-bottom: 0.5rem;
+      &__body {
+        padding: 1rem 0;
+      }
     }
 
-    &_icon {
-      width: 1rem;
-      display: inline-block;
-      margin-right: 0.5rem;
+    .card {
+      &-content__part {
+        &_attribute-icon {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-bottom: 0.5rem;
+        }
+
+        &_icon {
+          width: 1rem;
+          display: inline-block;
+          margin-right: 0.5rem;
+        }
+      }
     }
   }
 }

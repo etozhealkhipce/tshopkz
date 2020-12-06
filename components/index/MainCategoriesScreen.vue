@@ -16,7 +16,7 @@
                 </div>
                 <div class="card-content">
                   <h3 class="title is-5 is-spaced">{{ product.title }}</h3>
-                  <p class="subtitle is-5">{{ product.description }}</p>
+                  <div v-html="product.description"></div>
                 </div>
               </div>
             </nuxt-link>

@@ -58,9 +58,6 @@ export default {
     apiPath() {
       return `${this.$store.state.apiPath}storage`
     }
-  },
-  mounted() {
-    console.log(this.sliders)
   }
 }
 </script>

@@ -369,13 +369,6 @@ export default {
     @include horizontal-end;
   }
 
-  hr {
-    width: 100%;
-    background-color: #47484e;
-    height: 2px;
-    margin: 0;
-  }
-
   .container {
     height: 500px;
   }

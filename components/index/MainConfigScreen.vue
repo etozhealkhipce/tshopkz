@@ -21,7 +21,7 @@ export default {}
 
 <style lang="scss" scoped>
 .config {
-  background: url('https://api.tshop.kz/storage/sliders/December2020/65eX1xiX68SWptdIIOBP.jpg') center/cover no-repeat;
+  background: url('~assets/images/slide1.jpg') center/cover no-repeat;
   height: 37rem;
 
   &__content_wrapper {
