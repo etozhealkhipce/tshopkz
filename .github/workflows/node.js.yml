@@ -19,7 +19,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /var/www/tshopkz
-            git pull
+            git pull origin master
             npm i
   
   build:
