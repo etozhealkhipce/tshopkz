@@ -6,21 +6,43 @@ on:
       - master
 
 jobs:
+#   delete:
+#     runs-on: ubuntu-latest
+    
+#     steps:
+#       - name: Delete old ver.
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.SSH_HOST }}
+#           username: ${{ secrets.SSH_USERNAME }}
+#           key: ${{ secrets.SSH_KEY }}
+#           port: ${{ secrets.SSH_PORT }}
+#           script: |
+#             cd /var/www
+#             rm -rf tshopkz
+#             git clone git@github.com:etozhealkhipce/tshopkz.git
+#             cd tshopkz
+#             npm install
+#             pm2 start
   deploy:
     runs-on: ubuntu-latest
-
+  
     steps:
-      - name: SSH and deploy node app
-        uses: appleboy/ssh-action@master
+      - uses: actions/checkout@master
+
+      - name: Bucket actions
+        uses: actions/setup-node@v1
         with:
+          node-version: 8
+      - run: npm i
+      - run: npm run build
+      
+      - name: Publish
+        uses: nogsantos/scp-deploy@master
+        with:
+          src: ./*
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          remote: /var/www
           port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd /var/www
-            rm -rf tshopkz
-            git clone git@github.com:etozhealkhipce/tshopkz.git
-            cd tshopkz
-            npm install
-            pm2 start
+          user: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
