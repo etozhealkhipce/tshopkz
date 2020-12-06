@@ -457,7 +457,7 @@
                 </template>
                 <template v-else>
                   <div class="column is-full">
-                    <h2 class="subtitle is-4">Заказы отсутствуют</h2>
+                    <h2 class="subtitle is-4">Заказы отсутствуют...</h2>
                   </div>
                 </template>
               </div>
