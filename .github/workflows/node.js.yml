@@ -5,20 +5,20 @@ on:
     branches:
       - master
 
-jobs:  
+jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@master
-        
+
       - name: Build
         uses: actions/setup-node@v1
         with:
           node-version: 8
       - run: npm i
       - run: npm run build
-      
+
       - name: Deploy
         uses: nogsantos/scp-deploy@master
         with:
@@ -32,7 +32,7 @@ jobs:
   clone:
     needs: build
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Clone
         uses: appleboy/ssh-action@master
