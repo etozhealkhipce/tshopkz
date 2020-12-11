@@ -444,7 +444,7 @@
                       <br />
                       <div class="custom-select">
                         <select id="paymentType" v-model="order.payment_type">
-                          <option value="loan">Кредит</option>
+                          <!-- <option value="loan">Кредит</option> -->
                           <option value="cash">Наличные</option>
                           <option value="online">Онлайн-оплата</option>
                         </select>
@@ -487,7 +487,8 @@
 
                       <div class="card__block">
                         <div v-for="(product, index) in products" :key="`item-${index}`">
-                          <h3 class="card-content__main-title title is-4 is-spaced">{{ product.title }}</h3>
+                          <h3 class="title is-4">{{ product.title }}</h3>
+                          <div class="card-content__main-title" v-html="product.description"></div>
                           <h3 class="title is-5">
                             Стоимость:
                             {{ (product.price * product.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }}
@@ -499,7 +500,7 @@
 
                       <div class="card__block">
                         <p class="title is-5">
-                          Общая сумма:
+                          Общая стоимость товаров:
                           {{
                             totalPrice
                               .toFixed()
@@ -662,38 +663,38 @@ export default {
     async fetchWishlist() {
       await this.$store.dispatch('account/fetchWishlist')
     },
-    setReceiverCity(currentReceiverCity) {
+    async setReceiverCity(currentReceiverCity) {
       this.order.receiverCity = currentReceiverCity.name
       this.order.receiverCityId = currentReceiverCity.code
       this.receiverCityPostCode = currentReceiverCity.postCode
 
-      // const goods = []
-      // this.productsArr.forEach((product) => {
-      //   const good = {
-      //     weigth: product.weight,
-      //     lenght: product.length,
-      //     width: product.width,
-      //     height: product.height
-      //   }
+      const goods = []
+      this.productsArr.forEach((product) => {
+        const good = {
+          weight: product.weight,
+          length: product.length,
+          width: product.width,
+          height: product.height
+        }
 
-      //   goods.push(good)
-      // })
+        goods.push(good)
+      })
 
-      // const body = {
-      //   goods,
-      //   senderCityId: this.order.senderCityId,
-      //   receiverCityId: this.order.receiverCityId,
-      //   tariffList: this.order.tariffList,
-      //   services: [
-      //     {
-      //       id: 2,
-      //       param: 1000
-      //     }
-      //   ]
-      // }
+      const body = {
+        goods,
+        senderCityId: this.order.senderCityId,
+        receiverCityId: this.order.receiverCityId,
+        tariffList: this.order.tariffList,
+        services: [
+          {
+            id: 2,
+            param: 1000
+          }
+        ]
+      }
 
-      // const response = await this.$axios.post('/sdet-api-for-calc-price', body)
-      // console.log(response)
+      const response = await this.$axios.post('/sdet-api-for-calc-price', body)
+      this.deliveryPrice = response.data
     },
     async checkPromo() {
       try {

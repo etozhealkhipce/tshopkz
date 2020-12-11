@@ -2,6 +2,8 @@ export default function({ $axios, $auth, route }) {
   $axios.onRequest(() => {
     if (route.query && route.query.token) {
       $auth.setToken('local', route.query.token)
+      // const user =
+      $auth.setUser('')
     }
   })
 
