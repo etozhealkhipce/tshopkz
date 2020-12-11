@@ -662,38 +662,38 @@ export default {
     async fetchWishlist() {
       await this.$store.dispatch('account/fetchWishlist')
     },
-    async setReceiverCity(currentReceiverCity) {
+    setReceiverCity(currentReceiverCity) {
       this.order.receiverCity = currentReceiverCity.name
       this.order.receiverCityId = currentReceiverCity.code
       this.receiverCityPostCode = currentReceiverCity.postCode
 
-      const goods = []
-      this.productsArr.forEach((product) => {
-        const good = {
-          weigth: product.weight,
-          lenght: product.length,
-          width: product.width,
-          height: product.height
-        }
+      // const goods = []
+      // this.productsArr.forEach((product) => {
+      //   const good = {
+      //     weigth: product.weight,
+      //     lenght: product.length,
+      //     width: product.width,
+      //     height: product.height
+      //   }
 
-        goods.push(good)
-      })
+      //   goods.push(good)
+      // })
 
-      const body = {
-        goods,
-        senderCityId: this.order.senderCityId,
-        receiverCityId: this.order.receiverCityId,
-        tariffList: this.order.tariffList
-        // services: [
-        //   {
-        //     id: 2,
-        //     param: 1000
-        //   }
-        // ]
-      }
+      // const body = {
+      //   goods,
+      //   senderCityId: this.order.senderCityId,
+      //   receiverCityId: this.order.receiverCityId,
+      //   tariffList: this.order.tariffList,
+      //   services: [
+      //     {
+      //       id: 2,
+      //       param: 1000
+      //     }
+      //   ]
+      // }
 
-      const response = await this.$axios.post('/sdet-api-for-calc-price', body)
-      console.log(response)
+      // const response = await this.$axios.post('/sdet-api-for-calc-price', body)
+      // console.log(response)
     },
     async checkPromo() {
       try {
