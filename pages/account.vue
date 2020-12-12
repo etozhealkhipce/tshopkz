@@ -610,22 +610,20 @@ export default {
         if (!this.$v.userInfo.email.$invalid && !this.$v.password.$invalid) {
           this.error = ''
           this.editDone = false
+          const urlencoded = this.urlencodedGenerate()
           this.$store.dispatch('editIsLoading', true)
 
           if (this.loggedInUser.email !== this.userInfo.email) {
-            const loginResponse = await this.$axios.post('/login', {
-              email: this.loggedInUser.email,
-              password: this.password
-            })
+            // if (this.loggedInUser.email !== null) {
+            //   await this.$axios.post('/login', {
+            //     email: this.loggedInUser.email,
+            //     password: this.password
+            //   })
+            // }
 
-            if (loginResponse.data.token) {
-              const urlencoded = this.urlencodedGenerate()
-              urlencoded.append('email', this.userInfo.email)
-              await this.$axios.put('/user', urlencoded)
-              this.emailSent = true
-            } else {
-              this.error = 'Неверный пароль!'
-            }
+            urlencoded.append('email', this.userInfo.email)
+            await this.$axios.put('/user', urlencoded)
+            this.emailSent = true
           } else {
             this.error = 'Измените e-mail!'
           }
