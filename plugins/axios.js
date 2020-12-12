@@ -1,17 +1,17 @@
-export default function({ $axios, $auth, route }) {
-  $axios.onRequest(() => {
-    if (route.query && route.query.token) {
-      $auth.setToken('local', route.query.token)
-      // const user =
-      $auth.setUser('')
+export default function({ $axios, $auth, route, redirect }) {
+  if (route.query && route.query.token) {
+    try {
+      $auth.setUserToken(route.query.token)
+    } catch {
+      console.log('error')
     }
-  })
+  }
 
-  $axios.onError((error) => {
-    console.log(error)
-    // if (error.response.status === 500 || error.response.status === 404) {
-    //   redirect('/')
-
-    // }
-  })
+  // $axios.onError((error) => {
+  //   if (error.response.status === 500) {
+  //     redirect('/')
+  //   } else if (error.response.status === 404) {
+  //     redirect('/')
+  //   }
+  // })
 }
