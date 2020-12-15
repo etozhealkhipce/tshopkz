@@ -52,6 +52,9 @@
               >{{ doc.name }} <span class="divider">| </span>
             </a>
           </p>
+          <p class="subtitle is-6 has-text-centered">
+            Спроектировано и разработано <a target="_blank" href="https://xn--80adjqf5a.kz/">вейкап.kz</a>
+          </p>
         </div>
       </div>
     </div>
