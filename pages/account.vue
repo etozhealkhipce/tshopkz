@@ -614,13 +614,6 @@ export default {
           this.$store.dispatch('editIsLoading', true)
 
           if (this.loggedInUser.email !== this.userInfo.email) {
-            // if (this.loggedInUser.email !== null) {
-            //   await this.$axios.post('/login', {
-            //     email: this.loggedInUser.email,
-            //     password: this.password
-            //   })
-            // }
-
             urlencoded.append('email', this.userInfo.email)
             await this.$axios.put('/user', urlencoded)
             this.emailSent = true
