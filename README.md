@@ -1,5 +1,5 @@
 # tshop
-![example workflow name](https://github.com/alkhipce/tshop/workflows/.github/workflows/node.js.yml/badge.svg)
+[![YourActionName Actions Status](https://github.com/{userName}/{repoName}/workflows/{workflowName}/badge.svg)](https://github.com/{userName}/{repoName}/actions)
 
 
 > Интернет-магазин игровых компьютеров tshop.kz
