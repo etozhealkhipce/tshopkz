@@ -1,5 +1,5 @@
 # tshop
-[![YourActionName Actions Status](https://img.shields.io/github/workflow/status/alkhipce/tshop/node.js.yml)](https://github.com/{userName}/{repoName}/actions)
+[![build Actions Status](https://img.shields.io/github/workflow/status/alkhipce/tshop/node.js.yml)](https://github.com/{userName}/{repoName}/actions)
 
 
 > Интернет-магазин игровых компьютеров tshop.kz
