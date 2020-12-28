@@ -444,7 +444,7 @@
                       <br />
                       <div class="custom-select">
                         <select id="paymentType" v-model="order.payment_type">
-                          <!-- <option value="loan">Кредит</option> -->
+                          <option value="loan">Кредит</option>
                           <option value="cash">Наличные</option>
                           <option value="online">Онлайн-оплата</option>
                         </select>
