@@ -10,9 +10,9 @@
           <div class="column is-6 auth__form">
             <p class="subtitle is-6 has-text-centered">Войти через социальные сети</p>
             <div class="auth__icons">
-              <span class="icon__fb" @click="loginSocial('facebook')"></span>
+              <!-- <span class="icon__fb" @click="loginSocial('facebook')"></span>
               <span class="icon__ig" @click="loginSocial('instagram')"></span>
-              <span class="icon__mr" @click="loginSocial('mailru')"></span>
+              <span class="icon__mr" @click="loginSocial('mailru')"></span> -->
               <span class="icon__vk" @click="loginSocial('vkontakte')"></span>
             </div>
             <p class="subtitle is-6 has-text-centered">или используя вход</p>
