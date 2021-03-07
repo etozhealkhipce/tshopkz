@@ -48,8 +48,11 @@
                     <template v-if="currentCatId === category.id">
                       <div :key="`header-${catIndex}`" class="current__header">
                         <h2 class="title is-4 is-spaced">{{ category.title }}</h2>
-                        <span class="subtitle is-5 sort" @click="sortProducts(category, catIndex)"
+                        <span class="subtitle is-5 sort" @click="sortProducts('price', category, catIndex)"
                           >Сортировка по цене</span
+                        >
+                        <span class="subtitle is-5 sort" @click="sortProducts('title', category, catIndex)"
+                          >Сортировка по модели</span
                         >
                       </div>
                       <hr :key="`hr-${catIndex}`" />
@@ -312,7 +315,10 @@ export default {
       constructorSave: false,
       compatibilityLoading: false,
       createLoading: false,
-      sorted: false
+      sorted: {
+        price: false,
+        title: false
+      }
     }
   },
   computed: {
@@ -356,13 +362,23 @@ export default {
     this.fetchCategories()
   },
   methods: {
-    sortProducts(category, catIndex) {
-      if (this.sorted) {
-        this.categories[catIndex].products = category.products.sort((a, b) => b.price - a.price)
-        this.sorted = false
-      } else {
-        this.categories[catIndex].products = category.products.sort((a, b) => a.price - b.price)
-        this.sorted = true
+    sortProducts(type, category, catIndex) {
+      if (type === 'price') {
+        if (this.sorted.price) {
+          this.categories[catIndex].products = category.products.sort((a, b) => b.price - a.price)
+          this.sorted.price = false
+        } else {
+          this.categories[catIndex].products = category.products.sort((a, b) => a.price - b.price)
+          this.sorted.price = true
+        }
+      } else if (type === 'title') {
+        if (this.sorted.title) {
+          this.categories[catIndex].products = category.products.sort((a, b) => ('' + a.title).localeCompare(b.title))
+          this.sorted.title = false
+        } else {
+          this.categories[catIndex].products = category.products.sort((a, b) => ('' + b.title).localeCompare(a.title))
+          this.sorted.title = true
+        }
       }
     },
     productChange(product) {
