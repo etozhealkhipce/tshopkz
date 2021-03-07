@@ -48,6 +48,9 @@
                     <template v-if="currentCatId === category.id">
                       <div :key="`header-${catIndex}`" class="current__header">
                         <h2 class="title is-4 is-spaced">{{ category.title }}</h2>
+                        <span class="subtitle is-5 sort" @click="sortProducts(category, catIndex)"
+                          >Сортировка по цене</span
+                        >
                       </div>
                       <hr :key="`hr-${catIndex}`" />
                       <div :key="`columns-${catIndex}`" class="category columns is-multiline">
@@ -308,7 +311,8 @@ export default {
 
       constructorSave: false,
       compatibilityLoading: false,
-      createLoading: false
+      createLoading: false,
+      sorted: false
     }
   },
   computed: {
@@ -352,6 +356,15 @@ export default {
     this.fetchCategories()
   },
   methods: {
+    sortProducts(category, catIndex) {
+      if (this.sorted) {
+        this.categories[catIndex].products = category.products.sort((a, b) => b.price - a.price)
+        this.sorted = false
+      } else {
+        this.categories[catIndex].products = category.products.sort((a, b) => a.price - b.price)
+        this.sorted = true
+      }
+    },
     productChange(product) {
       if (product.pivot.category_id === this.cpusId) {
         this.products = {}
@@ -489,6 +502,17 @@ export default {
 <style scoped lang="scss">
 .main {
   padding-top: 0;
+
+  .current {
+    &__header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .sort {
+      cursor: pointer;
+    }
+  }
 
   label {
     cursor: pointer;
