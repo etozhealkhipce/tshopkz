@@ -55,10 +55,42 @@
                           >Сортировка по модели</span
                         >
                       </div>
-                      <hr :key="`hr-${catIndex}`" />
+                      <div :key="`tabs-${catIndex}`" class="tabs">
+                        <ul v-if="category.slug === 'cpus'">
+                          <li :class="{ 'is-active': filterText === '' }" @click="filterText = ''">
+                            <a>Все</a>
+                          </li>
+                          <li :class="{ 'is-active': filterText === 'i3' }" @click="filterText = 'i3'">
+                            <a>Intel Core i3</a>
+                          </li>
+                          <li :class="{ 'is-active': filterText === 'i5' }" @click="filterText = 'i5'">
+                            <a>Intel Core i5</a>
+                          </li>
+                          <li :class="{ 'is-active': filterText === 'i7' }" @click="filterText = 'i7'">
+                            <a>Intel Core i7</a>
+                          </li>
+                          <li :class="{ 'is-active': filterText === 'i9' }" @click="filterText = 'i9'">
+                            <a>Intel Core i9</a>
+                          </li>
+                        </ul>
+                        <ul v-if="category.slug === 'videocards'">
+                          <li :class="{ 'is-active': filterText === '' }" @click="filterText = ''">
+                            <a>Все</a>
+                          </li>
+                          <li :class="{ 'is-active': filterText === 'AMD' }" @click="filterText = 'AMD'">
+                            <a>AMD</a>
+                          </li>
+                          <li :class="{ 'is-active': filterText === 'NVIDIA' }" @click="filterText = 'NVIDIA'">
+                            <a>NVIDIA</a>
+                          </li>
+                        </ul>
+                      </div>
+                      <!-- <hr :key="`hr-${catIndex}`" /> -->
                       <div :key="`columns-${catIndex}`" class="category columns is-multiline">
                         <div
-                          v-for="(product, index) in category.products"
+                          v-for="(product, index) in category.products.filter((product) =>
+                            product.title.includes(filterText)
+                          )"
                           :key="`detail-${index}`"
                           class="column is-full"
                         >
@@ -318,7 +350,9 @@ export default {
       sorted: {
         price: false,
         title: false
-      }
+      },
+
+      filterText: ''
     }
   },
   computed: {
